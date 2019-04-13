@@ -25,8 +25,6 @@ bot.on('ready', async () => {
     }
   }
 
-  console.log(bot.commands);
-  console.log(bot.guilds);
   console.log('Ready!');
 });
 
@@ -39,7 +37,10 @@ bot.on('messageCreate', async (msg) => {
     return;
   }
   const guild = await storage.getItem(msg.channel.guild.id, {});
-  return msg.channel.createMessage(`Say \`${guild.prefix[0]}help\` to see my commands!`);
+  if (guild.prefix) {
+    return msg.channel.createMessage(`Say \`${guild.prefix[0]}help\` to see my commands!`);
+  }
+  return msg.channel.createMessage(`Say \`${bot.commandOptions.prefix[0]}help\` to see my commands!`);
 });
 
 bot.connect();

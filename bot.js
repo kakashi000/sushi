@@ -3,7 +3,7 @@ const config = require('./config/config.json');
 
 const botOptions = { restMode: true };
 const commandOptions = {
-  prefix: ['-='],
+  prefix: ['='],
   owner: 'kakashi',
   description: 'a bot made using Eris',
 };
