@@ -25,6 +25,10 @@ bot.on('ready', async () => {
     }
   }
 
+  bot.editStatus('online', {
+    name: '@ me for help!',
+  });
+
   console.log('Ready!');
 });
 
