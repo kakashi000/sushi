@@ -25,8 +25,6 @@ bot.on('ready', async () => {
     }
   }
 
-  bot.editStatus('invisible');
-
   console.log(bot.commands);
   console.log(bot.guilds);
   console.log('Ready!');
