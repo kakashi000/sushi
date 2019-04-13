@@ -1,0 +1,12 @@
+# node modules
+node_modules/
+
+# vscode
+.vscode/
+
+# fpersist storage
+storage/
+
+# keys
+config.json
+config-empty.json
