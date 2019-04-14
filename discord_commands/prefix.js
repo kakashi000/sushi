@@ -23,7 +23,7 @@ command.action = async (msg, args) => {
 };
 
 command.options = {
-  description: 'Sets the guild prefix',
+  description: 'Sets the guild prefix!',
   errorMessage: 'Something went wrong with that command.',
   requirements: {
     permissions: { administrator: true },

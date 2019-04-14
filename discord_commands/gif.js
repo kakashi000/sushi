@@ -13,7 +13,7 @@ command.action = async (msg, args) => {
 
 command.options = {
   aliases: ['g', 'giphy'],
-  description: 'Search for a GIF using Giphy',
+  description: 'Search for a GIF using Giphy!',
   errorMessage: 'Something went wrong with that command.',
   usage: 'gif anime cute',
 };

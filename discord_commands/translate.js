@@ -42,7 +42,7 @@ command.action = async (msg, args) => {
 command.options = {
   aliases: ['trans', 'tr'],
   argsRequired: true,
-  description: 'Translates text using Yandex.Translate',
+  description: 'Translates text using Yandex.Translate!',
   errorMessage: 'Something went wrong with that command.',
   usage: 'trans en-ja cute',
 };

@@ -8,8 +8,6 @@ const storage = require('./config/storage.js');
 const commands = requireDir('./discord_commands');
 
 bot.on('ready', async () => {
-
-
   // register bot commands and generate help embed fields
   Object.keys(commands).forEach((key) => {
     bot.registerCommand(key, commands[key].action, commands[key].options);
@@ -50,7 +48,7 @@ bot.on('ready', async () => {
     Object.keys(commands).forEach((key) => {
       helpEmbed.embed.fields.push({
         name: key,
-        value: `${commands[key].options.description}\n${guild.prefix[0]}${commands[key].options.usage}`,
+        value: `${commands[key].options.description}\n\`${guild.prefix[0]}${commands[key].options.usage}\``,
       });
     });
 
