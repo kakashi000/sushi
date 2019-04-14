@@ -15,6 +15,7 @@ command.options = {
   aliases: ['g', 'giphy'],
   description: 'Search for a GIF using Giphy',
   errorMessage: 'Something went wrong with that command.',
+  usage: 'gif anime cute',
 };
 
 module.exports = command;

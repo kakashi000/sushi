@@ -28,6 +28,7 @@ command.options = {
   requirements: {
     permissions: { administrator: true },
   },
+  usage: 'prefix - /',
 };
 
 module.exports = command;

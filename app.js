@@ -8,30 +8,11 @@ const storage = require('./config/storage.js');
 const commands = requireDir('./discord_commands');
 
 bot.on('ready', async () => {
-  const helpEmbed = {
-    embed: {
-      description: 'Here are my commands~',
-      color: config.color,
-      author: {
-        name: bot.user.username,
-        icon_url: bot.user.avatarURL,
-      },
-      timestamp: new Date(),
-      footer: {
-        icon_url: bot.user.avatarURL,
-        text: 'made using the Eris library',
-      },
-      fields: [],
-    },
-  };
+
 
   // register bot commands and generate help embed fields
   Object.keys(commands).forEach((key) => {
     bot.registerCommand(key, commands[key].action, commands[key].options);
-    helpEmbed.embed.fields.push({
-      name: key,
-      value: commands[key].options.description,
-    });
   });
 
   // register guild prefixes
@@ -47,7 +28,32 @@ bot.on('ready', async () => {
     }
   }
 
-  bot.registerCommand('help', (msg, args) => {
+  bot.registerCommand('help', async (msg, args) => {
+    const helpEmbed = {
+      embed: {
+        description: '',
+        color: config.color,
+        author: {
+          name: bot.user.username,
+          icon_url: bot.user.avatarURL,
+        },
+        timestamp: new Date(),
+        footer: {
+          icon_url: bot.user.avatarURL,
+          text: 'made using the Eris library',
+        },
+        fields: [],
+      },
+    };
+    const guild = await storage.getItem(msg.channel.guild.id, {});
+
+    Object.keys(commands).forEach((key) => {
+      helpEmbed.embed.fields.push({
+        name: key,
+        value: `${commands[key].options.description}\n${guild.prefix[0]}${commands[key].options.usage}`,
+      });
+    });
+
     if (!args[0]) {
       return msg.channel.createMessage(helpEmbed);
     }

@@ -8,6 +8,7 @@ command.options = {
   aliases: ['h', 'hagu'],
   description: '@ someone to hug them!',
   errorMessage: 'Something went wrong with that command.',
+  usage: 'hug @sushi',
 };
 
 module.exports = command;
