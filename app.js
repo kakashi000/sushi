@@ -2,14 +2,36 @@
 /* eslint-disable no-console */
 const requireDir = require('require-dir');
 const bot = require('./bot.js');
+const config = require('./config/config.json');
 const storage = require('./config/storage.js');
 
 const commands = requireDir('./discord_commands');
 
 bot.on('ready', async () => {
-  // register bot commands
+  const helpEmbed = {
+    embed: {
+      description: 'Here are my commands~',
+      color: config.color,
+      author: {
+        name: bot.user.username,
+        icon_url: bot.user.avatarURL,
+      },
+      timestamp: new Date(),
+      footer: {
+        icon_url: bot.user.avatarURL,
+        text: 'made using the Eris library',
+      },
+      fields: [],
+    },
+  };
+
+  // register bot commands and generate help embed fields
   Object.keys(commands).forEach((key) => {
     bot.registerCommand(key, commands[key].action, commands[key].options);
+    helpEmbed.embed.fields.push({
+      name: key,
+      value: commands[key].options.description,
+    });
   });
 
   // register guild prefixes
@@ -24,6 +46,16 @@ bot.on('ready', async () => {
       bot.registerGuildPrefix(guild.id, guildConfig.prefix);
     }
   }
+
+  bot.registerCommand('help', (msg, args) => {
+    if (!args[0]) {
+      return msg.channel.createMessage(helpEmbed);
+    }
+    return msg.channel.createMessage(helpEmbed);
+  },
+  {
+
+  });
 
   bot.editStatus('online', {
     name: '@ me!',

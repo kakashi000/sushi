@@ -6,6 +6,7 @@ const commandOptions = {
   prefix: ['='],
   owner: 'kakashi',
   description: 'a bot made using Eris',
+  defaultHelpCommand: false,
 };
 const bot = new Eris.CommandClient(config.botToken, botOptions, commandOptions);
 
