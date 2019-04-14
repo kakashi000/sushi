@@ -25,7 +25,7 @@ command.action = async (msg, args) => {
         fields: [],
       },
     };
-    console.log(bot.commands);
+
     // add a field for each command
     Object.keys(bot.commands).forEach((key) => {
       help.embed.fields.push({
