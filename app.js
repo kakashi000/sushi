@@ -7,11 +7,9 @@ const storage = require('./config/storage.js');
 const commands = requireDir('./discord_commands');
 
 bot.on('ready', async () => {
-  // register bot commands and generate help embed fields
+  // register bot commands
   Object.keys(commands).forEach((key) => {
-    if (key !== 'help') {
-      bot.registerCommand(key, commands[key].action, commands[key].options);
-    }
+    bot.registerCommand(key, commands[key].action, commands[key].options);
   });
 
   // register guild prefixes
@@ -26,8 +24,6 @@ bot.on('ready', async () => {
       bot.registerGuildPrefix(guild.id, guildConfig.prefix);
     }
   }
-
-  bot.registerCommand('help', commands.help.action, commands.help.options);
 
   bot.editStatus('online', {
     name: '@ me!',
@@ -54,6 +50,7 @@ bot.on('messageCreate', async (msg) => {
   if (guild.prefix) {
     return msg.channel.createMessage(`Say \`${guild.prefix[0]}help\` to see my commands!`);
   }
+
   return msg.channel.createMessage(`Say \`${bot.commandOptions.prefix[0]}help\` to see my commands!`);
 });
 
