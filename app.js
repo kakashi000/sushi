@@ -26,36 +26,67 @@ bot.on('ready', async () => {
     }
   }
 
+
   bot.registerCommand('help', async (msg, args) => {
-    const helpEmbed = {
+    const guild = await storage.getItem(msg.channel.guild.id, {});
+    if (!args[0]) {
+      const help = {
+        embed: {
+          description: '',
+          color: config.color,
+          author: {
+            name: bot.user.username,
+            icon_url: bot.user.avatarURL,
+          },
+          timestamp: new Date(),
+          footer: {
+            icon_url: bot.user.avatarURL,
+            text: 'made using the Eris library',
+          },
+          fields: [],
+        },
+      };
+
+      // add a field for each command
+      Object.keys(commands).forEach((key) => {
+        help.embed.fields.push({
+          name: key,
+          value: `${commands[key].options.description}\n\`${guild.prefix[0]}${commands[key].options.usage}\``,
+        });
+      });
+      return msg.channel.createMessage(help);
+    }
+
+    let commandName = args[0];
+
+    // check if there's a command for the given name/alias
+    if (!bot.commandAliases[commandName] && !bot.commands[commandName]) {
+      return msg.channel.createMessage('Command not found~');
+    }
+
+    if (!bot.commandAliases[commandName]) {
+      Object.keys(bot.commandAliases).forEach((key) => {
+        if (commandName === bot.commandAliases[key]) {
+          commandName = key;
+        }
+      });
+    }
+
+    const commandHelp = {
       embed: {
-        description: '',
         color: config.color,
-        author: {
-          name: bot.user.username,
-          icon_url: bot.user.avatarURL,
-        },
-        timestamp: new Date(),
-        footer: {
-          icon_url: bot.user.avatarURL,
-          text: 'made using the Eris library',
-        },
-        fields: [],
+        title: bot.commands[bot.commandAliases[commandName]].name,
+        description: bot.commands[bot.commandAliases[commandName]].description,
+        fields: [
+          {
+            name: 'Usage',
+            value: `\`${guild.prefix[0]}${bot.commands[bot.commandAliases[commandName]].usage}\``,
+          },
+        ],
       },
     };
-    const guild = await storage.getItem(msg.channel.guild.id, {});
 
-    Object.keys(commands).forEach((key) => {
-      helpEmbed.embed.fields.push({
-        name: key,
-        value: `${commands[key].options.description}\n\`${guild.prefix[0]}${commands[key].options.usage}\``,
-      });
-    });
-
-    if (!args[0]) {
-      return msg.channel.createMessage(helpEmbed);
-    }
-    return msg.channel.createMessage(helpEmbed);
+    return msg.channel.createMessage(commandHelp);
   },
   {
 
