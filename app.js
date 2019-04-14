@@ -26,7 +26,7 @@ bot.on('ready', async () => {
   }
 
   bot.editStatus('online', {
-    name: '@ me for help!',
+    name: '@ me!',
   });
 
   console.log('Ready!');
@@ -37,9 +37,15 @@ bot.on('error', (err) => {
 });
 
 bot.on('messageCreate', async (msg) => {
-  if (!msg.content.startsWith(bot.user.mention)) {
+  if (!msg.mentions[0]) {
     return;
   }
+
+  const mentionRegex = new RegExp(`^<@!?${bot.user.id}>`);
+  if (!mentionRegex.test(msg.content)) {
+    return;
+  }
+
   const guild = await storage.getItem(msg.channel.guild.id, {});
   if (guild.prefix) {
     return msg.channel.createMessage(`Say \`${guild.prefix[0]}help\` to see my commands!`);
