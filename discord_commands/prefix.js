@@ -25,9 +25,6 @@ command.action = async (msg, args) => {
 command.options = {
   description: 'Sets the guild prefix',
   errorMessage: 'Something went wrong with that command.',
-  fullDescription: 'Say ;prefix [prefix] to set the guild prefix. ',
-  invalidUsageMessage: `Say ;prefix [prefix] to set the guild prefix.
-  This can be a single prefix or a space-separated list of prefixes.`,
   requirements: {
     permissions: { administrator: true },
   },

@@ -13,7 +13,6 @@ command.options = {
   aliases: ['av', 'pfp'],
   description: 'Get the URL of a user\'s avatar',
   errorMessage: 'Something went wrong with that command.',
-  fullDescription: 'Say ;avatar [keyword] to get the URL of a user\'s avatar~',
 };
 
 module.exports = command;

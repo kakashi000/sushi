@@ -44,8 +44,6 @@ command.options = {
   argsRequired: true,
   description: 'Translates text using Yandex.Translate',
   errorMessage: 'Something went wrong with that command.',
-  fullDescription: 'Say ;trans [languages] [text to translate] to translate text! (e.g. ;tr en-ja please help me)',
-  invalidUsageMessage: 'Say ;trans [languages] [text to translate] to translate text! `(e.g. ;tr en-ja please help me)`',
 };
 
 module.exports = command;

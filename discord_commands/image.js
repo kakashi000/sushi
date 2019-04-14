@@ -25,11 +25,8 @@ command.action = async (msg, args) => {
 
 command.options = {
   aliases: ['img', 'image'],
-  argsRequired: true,
-  description: 'Searches for an image using Google Images',
+  description: 'Search for an image using Google Images',
   errorMessage: 'Something went wrong with that command.',
-  fullDescription: 'Say ;img [keyword] - Search for an image on Google Images',
-  invalidUsageMessage: 'Say ;img [keyword] - Search for an image on Google Images',
 };
 
 module.exports = command;

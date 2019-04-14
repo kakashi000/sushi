@@ -12,7 +12,6 @@ command.action = async (msg, args) => {
 command.options = {
   aliases: ['s', 'echo'],
   description: 'Make the bot say something',
-  fulldescription: 'Say ;say [text] to make the bot say something',
   errorMessage: 'Something went wrong with that command.',
 };
 
