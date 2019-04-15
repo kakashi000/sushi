@@ -1,3 +1,4 @@
+/* eslint-disable prefer-destructuring */
 const bot = require('../bot.js');
 const config = require('../config/config.json');
 const storage = require('../config/storage.js');
@@ -7,12 +8,14 @@ const command = {};
 command.name = 'help';
 
 command.action = async (msg, args) => {
-  let guild = {};
+  let prefix;
   if (msg.channel.guild) {
-    guild = await storage.getItem(msg.channel.guild.id, {});
+    const guild = await storage.getItem(msg.channel.guild.id, {});
+    prefix = guild.prefix[0];
   } else {
-    guild = { prefix: bot.commandOptions.prefix[0] };
+    prefix = bot.commandOptions.prefix[0];
   }
+
   if (!args[0]) {
     // generate help embed
     const help = {
@@ -36,29 +39,25 @@ command.action = async (msg, args) => {
     Object.keys(bot.commands).forEach((key) => {
       help.embed.fields.push({
         name: key,
-        value: `${bot.commands[key].description}\n\`${guild.prefix[0]}${bot.commands[key].usage}\``,
+        value: `${bot.commands[key].description}\n\`${prefix}${bot.commands[key].usage}\``,
       });
     });
     return msg.channel.createMessage(help);
   }
 
-  const commandName = args[0];
+  let commandName = args[0];
 
   // check if there's a command for the given name/alias
   if (!bot.commandAliases[commandName] && !bot.commands[commandName]) {
-    return msg.channel.createMessage('Command not found~');
+    return msg.channel.createMessage(`Command not found. Type ${prefix} to see my commands~`);
   }
 
-  // if commandName is not an alias, replace it with the corresponding alias
-  /* if (!bot.commandAliases[commandName]) {
-    Object.keys(bot.commandAliases).forEach((key) => {
-      if (commandName === bot.commandAliases[key]) {
-        commandName = key;
-      }
-    });
-  } */
+  // if commandName is an alias, replace it with the corresponding command name
+  if (bot.commandAliases[commandName]) {
+    commandName = bot.commandAliases[commandName];
+  }
 
-  // get command data using the alias
+  // get command data using the command name
   const commandHelp = {
     embed: {
       color: config.color,
@@ -67,7 +66,7 @@ command.action = async (msg, args) => {
       fields: [
         {
           name: 'Usage',
-          value: `\`${guild.prefix[0]}${bot.commands[commandName].usage}\``,
+          value: `\`${prefix}${bot.commands[commandName].usage}\``,
         },
       ],
     },
