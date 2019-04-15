@@ -73,6 +73,7 @@ command.action = async (msg, args) => {
 
 command.options = {
   aliases: ['h', 'commands'],
+  cooldown: 1000,
   description: 'Diplay the help message, or get more information on a command!',
   errorMessage: 'Something went wrong with that command.',
   usage: 'help translate',

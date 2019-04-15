@@ -25,6 +25,7 @@ command.action = async (msg, args) => {
 };
 
 command.options = {
+  cooldown: 1000,
   description: 'Sets the guild prefix!',
   errorMessage: 'Something went wrong with that command.',
   requirements: {

@@ -6,6 +6,7 @@ command.action = (msg, args) => msg.channel.createMessage(`${msg.author.mention}
 
 command.options = {
   aliases: ['k', 'kissu'],
+  cooldown: 1000,
   description: '@ someone to kiss them!',
   errorMessage: 'Something went wrong with that command.',
   usage: 'kiss @sushi',
