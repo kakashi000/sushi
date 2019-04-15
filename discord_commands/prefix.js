@@ -13,7 +13,9 @@ command.action = async (msg, args) => {
     }
     return msg.channel.createMessage(`Prefixes are set to \`${guild.prefix}\``);
   }
+
   bot.registerGuildPrefix(msg.channel.guild.id, args);
+  // save guild prefix data to storage
   await storage.editItem(msg.channel.guild.id, (guildConfig) => {
     const guild = guildConfig;
     guild.prefix = args;

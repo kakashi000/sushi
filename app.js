@@ -37,10 +37,12 @@ bot.on('error', (err) => {
 });
 
 bot.on('messageCreate', async (msg) => {
+  // check if message has mentions
   if (!msg.mentions[0]) {
     return;
   }
 
+  // check if the bot is mentioned at the start of the message
   const mentionRegex = new RegExp(`^<@!?${bot.user.id}>`);
   if (!mentionRegex.test(msg.content)) {
     return;

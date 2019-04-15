@@ -5,6 +5,7 @@ const command = {};
 command.name = 'say';
 
 command.action = async (msg, args) => {
+  // delete the message
   bot.deleteMessage(msg.channel.id, msg.id);
   return msg.channel.createMessage(args.join(' '));
 };

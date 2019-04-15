@@ -9,6 +9,7 @@ command.name = 'help';
 command.action = async (msg, args) => {
   const guild = await storage.getItem(msg.channel.guild.id, {});
   if (!args[0]) {
+    // generate help embed
     const help = {
       embed: {
         description: '',
@@ -43,6 +44,7 @@ command.action = async (msg, args) => {
     return msg.channel.createMessage('Command not found~');
   }
 
+  // if commandName is not an alias, replace it with the corresponding alias
   if (!bot.commandAliases[commandName]) {
     Object.keys(bot.commandAliases).forEach((key) => {
       if (commandName === bot.commandAliases[key]) {
@@ -51,6 +53,7 @@ command.action = async (msg, args) => {
     });
   }
 
+  // get command data using the alias
   const commandHelp = {
     embed: {
       color: config.color,
