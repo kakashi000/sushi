@@ -7,7 +7,12 @@ const command = {};
 command.name = 'help';
 
 command.action = async (msg, args) => {
-  const guild = await storage.getItem(msg.channel.guild.id, {});
+  let guild = {};
+  if (msg.channel.guild) {
+    guild = await storage.getItem(msg.channel.guild.id, {});
+  } else {
+    guild = { prefix: bot.commandOptions.prefix[0] };
+  }
   if (!args[0]) {
     // generate help embed
     const help = {
@@ -37,7 +42,7 @@ command.action = async (msg, args) => {
     return msg.channel.createMessage(help);
   }
 
-  let commandName = args[0];
+  const commandName = args[0];
 
   // check if there's a command for the given name/alias
   if (!bot.commandAliases[commandName] && !bot.commands[commandName]) {
@@ -45,24 +50,24 @@ command.action = async (msg, args) => {
   }
 
   // if commandName is not an alias, replace it with the corresponding alias
-  if (!bot.commandAliases[commandName]) {
+  /* if (!bot.commandAliases[commandName]) {
     Object.keys(bot.commandAliases).forEach((key) => {
       if (commandName === bot.commandAliases[key]) {
         commandName = key;
       }
     });
-  }
+  } */
 
   // get command data using the alias
   const commandHelp = {
     embed: {
       color: config.color,
-      title: bot.commands[bot.commandAliases[commandName]].name,
-      description: bot.commands[bot.commandAliases[commandName]].description,
+      title: bot.commands[commandName].name,
+      description: bot.commands[commandName].description,
       fields: [
         {
           name: 'Usage',
-          value: `\`${guild.prefix[0]}${bot.commands[bot.commandAliases[commandName]].usage}\``,
+          value: `\`${guild.prefix[0]}${bot.commands[commandName].usage}\``,
         },
       ],
     },

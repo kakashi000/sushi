@@ -37,6 +37,17 @@ bot.on('error', (err) => {
 });
 
 bot.on('messageCreate', async (msg) => {
+  // check if message is a direct message
+  if (!msg.channel.guild) {
+    // ignore bot's own messages
+    if (msg.author.bot) {
+      return;
+    }
+    if (msg.content.startsWith('help')) {
+      return msg.channel.createMessage(`Say \`${bot.commandOptions.prefix[0]}help\` to see my commands!`);
+    }
+  }
+
   // check if message has mentions
   if (!msg.mentions[0]) {
     return;
