@@ -1,5 +1,3 @@
-const bot = require('../bot.js');
-
 const command = {};
 
 command.name = 'say';
