@@ -4,16 +4,14 @@ const command = {};
 
 command.name = 'say';
 
-command.action = async (msg, args) => {
-  // delete the message
-  bot.deleteMessage(msg.channel.id, msg.id);
-  return msg.channel.createMessage(args.join(' '));
-};
+command.action = async (msg, args) => msg.channel.createMessage(args.join(' '));
 
 command.options = {
   aliases: ['s', 'echo'],
   cooldown: 1000,
   description: 'Make the bot say something!',
+  // delete the user command message
+  deleteCommand: true,
   usage: 'say hi',
 };
 
