@@ -12,8 +12,12 @@ bot.on('ready', async () => {
   // register bot commands
   Object.keys(commands).forEach((key) => {
     // add the default errorMessage if the command doesn't have one
-    if (commands[key].options.errorMessage) {
+    if (!commands[key].options.errorMessage) {
       commands[key].options.errorMessage = errorMessage;
+    }
+    // add the default cooldown message if the command doesn't have one
+    if (!commands[key].options.cooldownMessage) {
+      commands[key].options.cooldownMessage = `That command has a ${(commands[key].options.cooldown / 1000)} second cooldown.`;
     }
     bot.registerCommand(key, commands[key].action, commands[key].options);
   });
