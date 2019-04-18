@@ -1,3 +1,4 @@
+/* eslint-disable consistent-return */
 /* eslint-disable no-param-reassign */
 /* eslint-disable prefer-destructuring */
 const got = require('got');
@@ -6,7 +7,7 @@ const config = require('../config/config.json');
 
 bot.persistence = {};
 
-async function generateEmbeds(args) {
+async function generateEmbeds(msg, args) {
   const options = {
     baseUrl: 'https://kitsu.io/api/edge/',
     headers: {
@@ -52,8 +53,8 @@ async function generateEmbeds(args) {
       },
       timestamp: new Date(),
       footer: {
-        icon_url: bot.user.avatarURL,
-        text: 'Tap the reaction buttons below to switch pages!',
+        icon_url: msg.author.avatarURL,
+        text: `${msg.author.username} can tap the reaction buttons below to switch pages!`,
       },
     },
   }));
@@ -66,8 +67,11 @@ const command = {};
 command.name = 'anime';
 
 command.action = async (msg, args) => {
-  const animeEmbeds = await generateEmbeds(args);
-  bot.persistence[msg.id] = animeEmbeds;
+  const animeEmbeds = await generateEmbeds(msg, args);
+  bot.persistence[msg.id] = {
+    embeds: animeEmbeds,
+    authorID: msg.author.id,
+  };
   return msg.channel.createMessage(animeEmbeds[0]);
 };
 
@@ -87,17 +91,35 @@ command.options.reactionButtons = [
   {
     emoji: '1⃣',
     type: 'edit',
-    response: msg => bot.persistence[msg.id][0],
+    response: (msg, args, userID) => {
+      if (bot.persistence[msg.id].authorID !== userID) {
+        return;
+      }
+
+      return bot.persistence[msg.id].embeds[0];
+    },
   },
   {
     emoji: '2⃣',
     type: 'edit',
-    response: msg => bot.persistence[msg.id][1],
+    response: (msg, args, userID) => {
+      if (bot.persistence[msg.id].authorID !== userID) {
+        return;
+      }
+
+      return bot.persistence[msg.id].embeds[1];
+    },
   },
   {
     emoji: '3⃣',
     type: 'edit',
-    response: msg => bot.persistence[msg.id][2],
+    response: (msg, args, userID) => {
+      if (bot.persistence[msg.id].authorID !== userID) {
+        return;
+      }
+
+      return bot.persistence[msg.id].embeds[2];
+    },
   },
 ];
 
