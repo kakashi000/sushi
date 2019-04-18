@@ -36,7 +36,6 @@ command.options = {
   aliases: ['bot'],
   cooldown: 1000,
   description: 'Diplay the about message!',
-  errorMessage: 'Something went wrong with that command.',
   usage: 'about',
 };
 

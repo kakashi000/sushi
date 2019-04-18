@@ -14,7 +14,6 @@ command.options = {
   aliases: ['s', 'echo'],
   cooldown: 1000,
   description: 'Make the bot say something!',
-  errorMessage: 'Something went wrong with that command.',
   usage: 'say hi',
 };
 

@@ -15,7 +15,6 @@ command.options = {
   aliases: ['giphy'],
   cooldown: 3000,
   description: 'Search for a GIF using Giphy!',
-  errorMessage: 'Something went wrong with that command.',
   usage: 'gif anime cute',
 };
 

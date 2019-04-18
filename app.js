@@ -7,10 +7,18 @@ const storage = require('./config/storage.js');
 const commands = requireDir('./discord_commands');
 
 bot.on('ready', async () => {
+  const errorMessage = 'Something went wrong with that command.';
+
   // register bot commands
   Object.keys(commands).forEach((key) => {
+    // add the default errorMessage if the command doesn't have one
+    if (commands[key].options.errorMessage) {
+      commands[key].options.errorMessage = errorMessage;
+    }
     bot.registerCommand(key, commands[key].action, commands[key].options);
   });
+
+  //
 
   // register guild prefixes
   const guilds = Array.from(bot.guilds.values());

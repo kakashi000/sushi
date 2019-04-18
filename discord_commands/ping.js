@@ -8,7 +8,6 @@ command.options = {
   aliases: ['pong'],
   cooldown: 1000,
   description: 'Respond with "pong!"',
-  errorMessage: 'Something went wrong with that command.',
   usage: 'ping',
 };
 

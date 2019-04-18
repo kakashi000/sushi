@@ -28,7 +28,6 @@ command.options = {
   aliases: ['pr'],
   cooldown: 1000,
   description: 'Sets the guild prefix!',
-  errorMessage: 'Something went wrong with that command.',
   guildOnly: true,
   requirements: {
     permissions: { administrator: true },

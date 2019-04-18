@@ -8,7 +8,6 @@ command.options = {
   aliases: ['kissu'],
   cooldown: 1000,
   description: '@ someone to kiss them!',
-  errorMessage: 'Something went wrong with that command.',
   usage: 'kiss @sushi',
 };
 
