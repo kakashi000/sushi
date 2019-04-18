@@ -53,7 +53,7 @@ async function generateEmbeds(args) {
       timestamp: new Date(),
       footer: {
         icon_url: bot.user.avatarURL,
-        text: 'powered by Kitsu.io',
+        text: 'Tap the reaction buttons below to switch pages!',
       },
     },
   }));
@@ -76,7 +76,7 @@ command.options = {
   cooldown: 3000,
   description: 'Search for an anime on Kitsu.io!',
   hooks: {
-    postCommand: async (msg, args, res) => {
+    postCommand: (msg, args, res) => {
       bot.persistence[res.id] = bot.persistence[msg.id];
     },
   },
@@ -87,17 +87,17 @@ command.options.reactionButtons = [
   {
     emoji: '1⃣',
     type: 'edit',
-    response: async msg => bot.persistence[msg.id][0],
+    response: msg => bot.persistence[msg.id][0],
   },
   {
     emoji: '2⃣',
     type: 'edit',
-    response: async msg => bot.persistence[msg.id][1],
+    response: msg => bot.persistence[msg.id][1],
   },
   {
     emoji: '3⃣',
     type: 'edit',
-    response: async msg => bot.persistence[msg.id][2],
+    response: msg => bot.persistence[msg.id][2],
   },
 ];
 
