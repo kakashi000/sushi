@@ -26,9 +26,10 @@ async function generateEmbeds(msg, args) {
     return 'Anime not found~';
   }
 
-  const embeds = response.body.data.map(anime => ({
+  const embeds = response.body.data.map((anime, index, data) => ({
     embed: {
       title: 'Kitsu Anime Search',
+      description: `Page ${(index + 1)} out of ${(data.length)}`,
       color: config.color,
       author: {
         icon_url: bot.user.avatarURL,
@@ -71,6 +72,7 @@ command.action = async (msg, args) => {
   bot.persistence[msg.id] = {
     embeds: animeEmbeds,
     authorID: msg.author.id,
+    page: 0,
   };
   return msg.channel.createMessage(animeEmbeds[0]);
 };
@@ -80,6 +82,7 @@ command.options = {
   cooldown: 3000,
   description: 'Search for an anime on Kitsu.io!',
   hooks: {
+    // reaction buttons take the bot's command message as the parameter
     postCommand: (msg, args, res) => {
       bot.persistence[res.id] = bot.persistence[msg.id];
     },
@@ -89,36 +92,33 @@ command.options = {
 
 command.options.reactionButtons = [
   {
-    emoji: '1⃣',
+    emoji: '⬅',
     type: 'edit',
     response: (msg, args, userID) => {
-      if (bot.persistence[msg.id].authorID !== userID) {
+      const data = bot.persistence[msg.id];
+      if (data.authorID !== userID) {
         return;
       }
-
-      return bot.persistence[msg.id].embeds[0];
+      if (data.page === 0) {
+        return;
+      }
+      bot.persistence[msg.id].page -= 1;
+      return data.embeds[(data.page - 1)];
     },
   },
   {
-    emoji: '2⃣',
+    emoji: '➡',
     type: 'edit',
     response: (msg, args, userID) => {
-      if (bot.persistence[msg.id].authorID !== userID) {
+      const data = bot.persistence[msg.id];
+      if (data.authorID !== userID) {
         return;
       }
-
-      return bot.persistence[msg.id].embeds[1];
-    },
-  },
-  {
-    emoji: '3⃣',
-    type: 'edit',
-    response: (msg, args, userID) => {
-      if (bot.persistence[msg.id].authorID !== userID) {
+      if (data.page === (data.embeds.length - 1)) {
         return;
       }
-
-      return bot.persistence[msg.id].embeds[2];
+      bot.persistence[msg.id].page += 1;
+      return data.embeds[(data.page)];
     },
   },
 ];
