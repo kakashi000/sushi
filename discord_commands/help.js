@@ -18,7 +18,7 @@ command.action = async (msg, args) => {
 
   if (!args[0]) {
     // generate help embed
-    const help = {
+    const helpEmbed = {
       embed: {
         description: '',
         color: config.color,
@@ -37,12 +37,12 @@ command.action = async (msg, args) => {
 
     // add a field for each command
     Object.keys(bot.commands).forEach((key) => {
-      help.embed.fields.push({
+      helpEmbed.embed.fields.push({
         name: key,
         value: `${bot.commands[key].description}\n\`${prefix}${bot.commands[key].usage}\``,
       });
     });
-    return msg.channel.createMessage(help);
+    return msg.channel.createMessage(helpEmbed);
   }
 
   let commandName = args[0];
@@ -58,7 +58,7 @@ command.action = async (msg, args) => {
   }
 
   // get command data using the command name
-  const commandHelp = {
+  const commandHelpEmbed = {
     embed: {
       color: config.color,
       title: bot.commands[commandName].name,
@@ -76,7 +76,7 @@ command.action = async (msg, args) => {
     },
   };
 
-  return msg.channel.createMessage(commandHelp);
+  return msg.channel.createMessage(commandHelpEmbed);
 };
 
 command.options = {

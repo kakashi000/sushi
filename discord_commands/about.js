@@ -4,7 +4,7 @@ const config = require('../config/config.json');
 const command = {};
 
 command.action = (msg) => {
-  const about = {
+  const aboutEmbed = {
     embed: {
       title: 'About sushi',
       description: 'An anime-themed discord bot.',
@@ -29,7 +29,7 @@ command.action = (msg) => {
     },
   };
 
-  return msg.channel.createMessage(about);
+  return msg.channel.createMessage(aboutEmbed);
 };
 
 command.options = {

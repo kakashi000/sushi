@@ -34,7 +34,7 @@ command.action = async (msg, args) => {
   anime.thumbnail = response.body.data[0].attributes.posterImage.small;
   anime.type = response.body.data[0].attributes.subtype;
 
-  const animeInfo = {
+  const animeEmbed = {
     embed: {
       title: 'Kitsu Anime Search',
       color: config.color,
@@ -66,7 +66,7 @@ command.action = async (msg, args) => {
     },
   };
 
-  return msg.channel.createMessage(animeInfo);
+  return msg.channel.createMessage(animeEmbed);
 };
 
 command.options = {

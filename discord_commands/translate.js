@@ -21,7 +21,7 @@ command.action = async (msg, args) => {
   };
   const response = await got('https://translate.yandex.net/api/v1.5/tr.json/translate', options);
   const textTranslated = decodeURIComponent(response.body.text[0]);
-  const content = {
+  const translationInfo = {
     embed: {
       color: config.color,
       title: 'Translation',
@@ -36,7 +36,7 @@ command.action = async (msg, args) => {
       ],
     },
   };
-  return msg.channel.createMessage(content);
+  return msg.channel.createMessage(translationInfo);
 };
 
 command.options = {
