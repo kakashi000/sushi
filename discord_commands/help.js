@@ -49,7 +49,7 @@ command.action = async (msg, args) => {
 
   // check if there's a command for the given name/alias
   if (!bot.commandAliases[commandName] && !bot.commands[commandName]) {
-    return msg.channel.createMessage(`Command not found. Type ${prefix} to see my commands~`);
+    return msg.channel.createMessage(`Command not found. Type ${prefix}help to see my commands~`);
   }
 
   // if commandName is an alias, replace it with the corresponding command name
@@ -64,6 +64,10 @@ command.action = async (msg, args) => {
       title: bot.commands[commandName].name,
       description: bot.commands[commandName].description,
       fields: [
+        {
+          name: 'Aliases',
+          value: `\`${bot.commands[commandName].aliases.join('`, `')}\``,
+        },
         {
           name: 'Usage',
           value: `\`${prefix}${bot.commands[commandName].usage}\``,
