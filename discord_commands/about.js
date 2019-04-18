@@ -33,7 +33,7 @@ command.action = (msg) => {
 };
 
 command.options = {
-  aliases: ['about-bot'],
+  aliases: ['bot'],
   cooldown: 1000,
   description: 'Diplay the about message!',
   errorMessage: 'Something went wrong with that command.',

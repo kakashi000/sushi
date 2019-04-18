@@ -24,7 +24,7 @@ command.action = async (msg, args) => {
 };
 
 command.options = {
-  aliases: ['img', 'image'],
+  aliases: ['img'],
   cooldown: 3000,
   description: 'Search for an image using Google Images!',
   errorMessage: 'Something went wrong with that command.',
