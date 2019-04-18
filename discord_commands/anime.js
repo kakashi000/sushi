@@ -1,13 +1,12 @@
+/* eslint-disable no-param-reassign */
 /* eslint-disable prefer-destructuring */
 const got = require('got');
 const bot = require('../bot.js');
 const config = require('../config/config.json');
 
-const command = {};
+bot.persistence = {};
 
-command.name = 'anime';
-
-command.action = async (msg, args) => {
+async function generateEmbeds(args) {
   const options = {
     baseUrl: 'https://kitsu.io/api/edge/',
     headers: {
@@ -23,18 +22,10 @@ command.action = async (msg, args) => {
   const response = await got('anime', options);
 
   if (!response.body.data[0]) {
-    return msg.channel.createMessage('Anime not found~');
+    return 'Anime not found~';
   }
 
-  const anime = {};
-  anime.title = response.body.data[0].attributes.canonicalTitle;
-  // cut off synopsis if it's too long
-  const synopsis = response.body.data[0].attributes.synopsis;
-  anime.synopsis = (synopsis.length < 700) ? synopsis : `${synopsis.substr(0, 700)}...`;
-  anime.thumbnail = response.body.data[0].attributes.posterImage.small;
-  anime.type = response.body.data[0].attributes.subtype;
-
-  const animeEmbed = {
+  const embeds = response.body.data.map(anime => ({
     embed: {
       title: 'Kitsu Anime Search',
       color: config.color,
@@ -44,19 +35,20 @@ command.action = async (msg, args) => {
       fields: [
         {
           name: 'Title',
-          value: anime.title,
+          value: anime.attributes.canonicalTitle,
         },
         {
           name: 'Type',
-          value: anime.type,
+          value: anime.attributes.subtype,
         },
         {
           name: 'Synopsis',
-          value: anime.synopsis,
+          value: (anime.attributes.synopsis.length < 700)
+            ? anime.attributes.synopsis : `${anime.attributes.synopsis.substr(0, 700)}...`,
         },
       ],
       thumbnail: {
-        url: anime.thumbnail,
+        url: anime.attributes.posterImage.small,
       },
       timestamp: new Date(),
       footer: {
@@ -64,16 +56,49 @@ command.action = async (msg, args) => {
         text: 'powered by Kitsu.io',
       },
     },
-  };
+  }));
 
-  return msg.channel.createMessage(animeEmbed);
+  return embeds;
+}
+
+const command = {};
+
+command.name = 'anime';
+
+command.action = async (msg, args) => {
+  const animeEmbeds = await generateEmbeds(args);
+  bot.persistence[msg.id] = animeEmbeds;
+  return msg.channel.createMessage(animeEmbeds[0]);
 };
 
 command.options = {
   aliases: ['a'],
   cooldown: 3000,
   description: 'Search for an anime on Kitsu.io!',
+  hooks: {
+    postCommand: async (msg, args, res) => {
+      bot.persistence[res.id] = bot.persistence[msg.id];
+    },
+  },
   usage: 'anime yuru yuri',
 };
+
+command.options.reactionButtons = [
+  {
+    emoji: '1⃣',
+    type: 'edit',
+    response: async msg => bot.persistence[msg.id][0],
+  },
+  {
+    emoji: '2⃣',
+    type: 'edit',
+    response: async msg => bot.persistence[msg.id][1],
+  },
+  {
+    emoji: '3⃣',
+    type: 'edit',
+    response: async msg => bot.persistence[msg.id][2],
+  },
+];
 
 module.exports = command;
