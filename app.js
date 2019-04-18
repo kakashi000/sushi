@@ -1,3 +1,4 @@
+/* eslint-disable prefer-destructuring */
 /* eslint-disable consistent-return */
 /* eslint-disable no-console */
 const requireDir = require('require-dir');
@@ -11,15 +12,22 @@ bot.on('ready', async () => {
 
   // register bot commands
   Object.keys(commands).forEach((key) => {
+    const options = commands[key].options;
+
     // add the default errorMessage if the command doesn't have one
-    if (!commands[key].options.errorMessage) {
-      commands[key].options.errorMessage = errorMessage;
+    if (!options.errorMessage) {
+      options.errorMessage = errorMessage;
     }
-    // add the default cooldown message if the command doesn't have one
-    if (!commands[key].options.cooldownMessage) {
-      commands[key].options.cooldownMessage = `That command has a ${(commands[key].options.cooldown / 1000)} second cooldown.`;
+
+    if (!options.cooldownMessage) {
+      options.cooldownMessage = `That command has a ${(options.cooldown / 1000)} second cooldown.`;
     }
-    bot.registerCommand(key, commands[key].action, commands[key].options);
+
+    if (!options.cooldownReturns) {
+      options.cooldownReturns = 1;
+    }
+
+    bot.registerCommand(key, commands[key].action, options);
   });
 
   //
