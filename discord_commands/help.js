@@ -7,41 +7,54 @@ const command = {};
 
 command.name = 'help';
 
+function generateHelpEmbed(prefix) {
+  const helpEmbed = {
+    embed: {
+      description: '',
+      color: config.color,
+      author: {
+        name: bot.user.username,
+        icon_url: bot.user.avatarURL,
+      },
+      timestamp: new Date(),
+      footer: {
+        icon_url: bot.user.avatarURL,
+        text: 'made using the Eris library',
+      },
+      fields: [],
+    },
+  };
+
+  // add a field for each command
+  Object.keys(bot.commands).forEach((key) => {
+    helpEmbed.embed.fields.push({
+      name: key,
+      value: `${bot.commands[key].description}\n\`${prefix}${bot.commands[key].usage}\``,
+    });
+  });
+
+  return helpEmbed;
+}
+
 command.action = async (msg, args) => {
   let prefix;
   if (msg.channel.guild) {
     const guild = await storage.getItem(msg.channel.guild.id, {});
-    prefix = guild.prefix[0];
+    if (guild.prefix) {
+      prefix = guild.prefix[0];
+    } else {
+      prefix = bot.commandOptions.prefix[0];
+    }
   } else {
     prefix = bot.commandOptions.prefix[0];
   }
 
   if (!args[0]) {
-    // generate help embed
-    const helpEmbed = {
-      embed: {
-        description: '',
-        color: config.color,
-        author: {
-          name: bot.user.username,
-          icon_url: bot.user.avatarURL,
-        },
-        timestamp: new Date(),
-        footer: {
-          icon_url: bot.user.avatarURL,
-          text: 'made using the Eris library',
-        },
-        fields: [],
-      },
+    const helpEmbed = await generateHelpEmbed(prefix);
+    bot.persistence[msg.id] = {
+      page: 0,
+      authorID: msg.author.id,
     };
-
-    // add a field for each command
-    Object.keys(bot.commands).forEach((key) => {
-      helpEmbed.embed.fields.push({
-        name: key,
-        value: `${bot.commands[key].description}\n\`${prefix}${bot.commands[key].usage}\``,
-      });
-    });
     return msg.channel.createMessage(helpEmbed);
   }
 
