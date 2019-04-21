@@ -2,7 +2,12 @@ const command = {};
 
 command.name = 'kiss';
 
-command.action = (msg, args) => msg.channel.createMessage(`${msg.author.mention} just kissed ${args[0]}~! `);
+command.action = (msg, args) => {
+  if (!args[0]) {
+    return msg.channel.createMessage(`${msg.author.mention} just kissed themselves?`);
+  }
+  return msg.channel.createMessage(`${msg.author.mention} just kissed ${args[0]}~! `);
+};
 
 command.options = {
   aliases: ['kissu'],
