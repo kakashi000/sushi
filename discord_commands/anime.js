@@ -73,7 +73,6 @@ command.action = async (msg, args) => {
     embeds: animeEmbeds,
     authorID: msg.author.id,
     page: 0,
-    timestamp: Math.floor(Date.now() / 1000),
   };
   setTimeout(() => delete bot.persistence[msg.id], command.options.reactionButtonTimeout);
   return msg.channel.createMessage(animeEmbeds[0]);
