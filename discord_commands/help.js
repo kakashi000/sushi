@@ -27,6 +27,10 @@ function generateHelpEmbed(prefix) {
 
   // add a field for each command
   Object.keys(bot.commands).forEach((key) => {
+    if (bot.commands[key].hidden) {
+      return;
+    }
+
     helpEmbed.embed.fields.push({
       name: key,
       value: `${bot.commands[key].description}\n\`${prefix}${bot.commands[key].usage}\``,
