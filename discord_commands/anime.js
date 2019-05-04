@@ -3,6 +3,7 @@
 /* eslint-disable prefer-destructuring */
 const got = require('got');
 const bot = require('../bot.js');
+const pagination = require('../common/pagination.js');
 const config = require('../config/config.json');
 
 bot.persistence = {};
@@ -69,60 +70,17 @@ command.name = 'anime';
 
 command.action = async (msg, args) => {
   const animeEmbeds = await generateEmbeds(msg, args);
-  bot.persistence[msg.id] = {
-    embeds: animeEmbeds,
-    authorID: msg.author.id,
-    page: 0,
-  };
+  const data = pagination.saveData(msg.id, animeEmbeds, msg.author.id);
   setTimeout(() => delete bot.persistence[msg.id], command.options.reactionButtonTimeout);
-  return msg.channel.createMessage(animeEmbeds[0]);
+  return msg.channel.createMessage(data[0]);
 };
 
 command.options = {
   aliases: ['a'],
   cooldown: 3000,
   description: 'Search for an anime on Kitsu.io!',
-  hooks: {
-    // reaction buttons take the bot's command message as the parameter
-    postCommand: (msg, args, res) => {
-      bot.persistence[res.id] = bot.persistence[msg.id];
-    },
-  },
   reactionButtonTimeout: 120000,
   usage: 'anime yuru yuri',
 };
 
-command.options.reactionButtons = [
-  {
-    emoji: '⬅',
-    type: 'edit',
-    response: (msg, args, userID) => {
-      const data = bot.persistence[msg.id];
-      if (data.authorID !== userID) {
-        return;
-      }
-      if (data.page === 0) {
-        return;
-      }
-      bot.persistence[msg.id].page -= 1;
-      return data.embeds[(data.page)];
-    },
-  },
-  {
-    emoji: '➡',
-    type: 'edit',
-    response: (msg, args, userID) => {
-      const data = bot.persistence[msg.id];
-      if (data.authorID !== userID) {
-        return;
-      }
-      if (data.page === (data.embeds.length - 1)) {
-        return;
-      }
-      bot.persistence[msg.id].page += 1;
-      return data.embeds[(data.page)];
-    },
-  },
-];
-
-module.exports = command;
+module.exports = pagination.addReactionButtons(command);
