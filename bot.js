@@ -7,7 +7,7 @@ const botOptions = {
 };
 
 const commandOptions = {
-  prefix: ['='],
+  prefix: ['s!'],
   owner: 'kakashi',
   description: 'a bot made using Eris',
   defaultHelpCommand: false,
