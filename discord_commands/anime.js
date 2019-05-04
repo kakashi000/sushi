@@ -63,17 +63,6 @@ async function generateEmbeds(msg, args) {
   return embeds;
 }
 
-function checkTimestamps(timeout) {
-  const timestamp = Math.floor(Date.now() / 1000);
-  // delete persistence data that are 60 seconds or older
-  Object.keys(bot.persistence).forEach((key) => {
-    const difference = timestamp - bot.persistence[key].timestamp;
-    if (difference > timeout) {
-      delete bot.persistence[key];
-    }
-  });
-}
-
 const command = {};
 
 command.name = 'anime';
@@ -86,6 +75,7 @@ command.action = async (msg, args) => {
     page: 0,
     timestamp: Math.floor(Date.now() / 1000),
   };
+  setTimeout(() => delete bot.persistence[msg.id], command.options.reactionButtonTimeout);
   return msg.channel.createMessage(animeEmbeds[0]);
 };
 
@@ -99,6 +89,7 @@ command.options = {
       bot.persistence[res.id] = bot.persistence[msg.id];
     },
   },
+  reactionButtonTimeout: 120000,
   usage: 'anime yuru yuri',
 };
 
@@ -107,8 +98,6 @@ command.options.reactionButtons = [
     emoji: '⬅',
     type: 'edit',
     response: (msg, args, userID) => {
-      const timeout = command.options.reactionButtonTimeout;
-      checkTimestamps(timeout);
       const data = bot.persistence[msg.id];
       if (data.authorID !== userID) {
         return;
@@ -124,8 +113,6 @@ command.options.reactionButtons = [
     emoji: '➡',
     type: 'edit',
     response: (msg, args, userID) => {
-      const timeout = command.options.reactionButtonTimeout;
-      checkTimestamps(timeout);
       const data = bot.persistence[msg.id];
       if (data.authorID !== userID) {
         return;
