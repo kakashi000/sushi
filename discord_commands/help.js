@@ -74,24 +74,41 @@ command.action = async (msg, args) => {
     commandName = bot.commandAliases[commandName];
   }
 
+  const botCommand = bot.commands[commandName];
+
   // get command data using the command name
   const commandHelpEmbed = {
     embed: {
       color: config.color,
-      title: bot.commands[commandName].name,
-      description: bot.commands[commandName].description,
+      title: commandName,
+      description: botCommand.description,
       fields: [
         {
           name: 'Aliases',
-          value: `\`${bot.commands[commandName].aliases.join('`, `')}\``,
+          value: `\`${botCommand.aliases.join('`, `')}\``,
         },
         {
           name: 'Usage',
-          value: `\`${prefix}${bot.commands[commandName].usage}\``,
+          value: `\`${prefix}${botCommand.usage}\``,
         },
       ],
     },
   };
+
+  const permissions = botCommand.requirements.permissions;
+
+  if (permissions.length !== 0) {
+    const permissionsList = [];
+    Object.keys(permissions).forEach((key) => {
+      permissionsList.push(key);
+    });
+    if (permissionsList[0]) {
+      commandHelpEmbed.embed.fields.push({
+        name: 'Requirements',
+        value: `\`${permissionsList.join('`, `')}\``,
+      });
+    }
+  }
 
   return msg.channel.createMessage(commandHelpEmbed);
 };
