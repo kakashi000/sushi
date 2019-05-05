@@ -2,42 +2,59 @@
 const bot = require('../bot.js');
 const config = require('../config/config.json');
 const storage = require('../config/storage.js');
+const pagination = require('../common/pagination.js');
 
 const command = {};
 
 command.name = 'help';
 
-function generateHelpEmbed(prefix) {
-  const helpEmbed = {
-    embed: {
-      description: '',
-      color: config.color,
-      author: {
-        name: bot.user.username,
-        icon_url: bot.user.avatarURL,
-      },
-      timestamp: new Date(),
-      footer: {
-        icon_url: bot.user.avatarURL,
-        text: 'made using the Eris library',
-      },
-      fields: [],
-    },
-  };
+function generateHelpEmbeds(prefix) {
+  const helpEmbeds = [];
 
-  // add a field for each command
-  Object.keys(bot.commands).forEach((key) => {
-    if (bot.commands[key].hidden) {
-      return;
-    }
+  const commandArray = Object.keys(bot.commands).map(
+    key => bot.commands[key],
+  );
 
-    helpEmbed.embed.fields.push({
-      name: key,
-      value: `${bot.commands[key].description}\n\`${prefix}${bot.commands[key].usage}\``,
+  const pageSize = 7;
+  const commandArrays = [];
+
+  for (let i = 0; i < commandArray.length; i += pageSize) {
+    commandArrays.push(commandArray.slice(i, i + pageSize));
+  }
+
+  commandArrays.forEach((arr) => {
+    const helpEmbed = {
+      embed: {
+        description: '',
+        color: config.color,
+        author: {
+          name: bot.user.username,
+          icon_url: bot.user.avatarURL,
+        },
+        timestamp: new Date(),
+        footer: {
+          icon_url: bot.user.avatarURL,
+          text: 'made using the Eris library',
+        },
+        fields: [],
+      },
+    };
+
+    arr.forEach((botCommand) => {
+      if (botCommand.hidden) {
+        return;
+      }
+
+      helpEmbed.embed.fields.push({
+        name: botCommand.label,
+        value: `${botCommand.description}\n\`${prefix}${botCommand.usage}\``,
+      });
     });
+
+    helpEmbeds.push(helpEmbed);
   });
 
-  return helpEmbed;
+  return helpEmbeds;
 }
 
 command.action = async (msg, args) => {
@@ -54,12 +71,14 @@ command.action = async (msg, args) => {
   }
 
   if (!args[0]) {
-    const helpEmbed = await generateHelpEmbed(prefix);
-    bot.persistence[msg.id] = {
-      page: 0,
-      authorID: msg.author.id,
-    };
-    return msg.channel.createMessage(helpEmbed);
+    const helpEmbeds = await generateHelpEmbeds(prefix);
+    const data = pagination.saveData(
+      msg.id,
+      helpEmbeds,
+      msg.author.id,
+      command.options.reactionButtonTimeout,
+    );
+    return msg.channel.createMessage(data[0]);
   }
 
   let commandName = args[0];
@@ -118,6 +137,7 @@ command.options = {
   cooldown: 1000,
   description: 'Diplay the help message, or get more information on a command!',
   usage: 'help translate',
+  reactionButtonTimeout: 120000,
 };
 
-module.exports = command;
+module.exports = pagination.addReactionButtons(command);

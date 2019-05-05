@@ -1,3 +1,4 @@
+/* eslint-disable arrow-body-style */
 /* eslint-disable consistent-return */
 
 const pagination = {};
@@ -9,7 +10,7 @@ pagination.saveData = (msgID, pages, authorID, timeout) => {
     authorID,
     pageNo: 0,
   };
-  setTimeout(() => delete pagination.state[msgID], timeout);
+  setTimeout(() => delete state[msgID], timeout);
   return pages;
 };
 
