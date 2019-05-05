@@ -11,12 +11,6 @@ const command = {};
 command.name = 'eval';
 
 command.action = async (msg, args) => {
-  const authorIsBotOwner = config.botOwnerIDs.find(id => id === msg.author.id);
-
-  if (!authorIsBotOwner) {
-    return msg.channel.createMessage('Only the bot owner can use that command.');
-  }
-
   const clean = (text) => {
     if (typeof (text) === 'string') return text.replace(/`/g, `\`${String.fromCharCode(8203)}`).replace(/@/g, `@${String.fromCharCode(8203)}`);
     return text;
@@ -40,6 +34,10 @@ command.options = {
   description: 'Evaluate some JavaScript!',
   usage: 'eval Math.Random()',
   hidden: true,
+  requirements: {
+    userIDs: config.botOwnerIDs,
+  },
+  permissionMessage: 'Only the bot owner can use that command.',
 };
 
 module.exports = command;
