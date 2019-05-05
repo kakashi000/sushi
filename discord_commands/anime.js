@@ -6,8 +6,6 @@ const bot = require('../bot.js');
 const pagination = require('../common/pagination.js');
 const config = require('../config/config.json');
 
-bot.persistence = {};
-
 async function generateEmbeds(msg, args) {
   const options = {
     baseUrl: 'https://kitsu.io/api/edge/',
@@ -70,8 +68,12 @@ command.name = 'anime';
 
 command.action = async (msg, args) => {
   const animeEmbeds = await generateEmbeds(msg, args);
-  const data = pagination.saveData(msg.id, animeEmbeds, msg.author.id);
-  setTimeout(() => delete bot.persistence[msg.id], command.options.reactionButtonTimeout);
+  const data = pagination.saveData(
+    msg.id,
+    animeEmbeds,
+    msg.author.id,
+    command.options.reactionButtonTimeout,
+  );
   return msg.channel.createMessage(data[0]);
 };
 

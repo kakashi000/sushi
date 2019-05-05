@@ -1,15 +1,16 @@
 /* eslint-disable consistent-return */
-const bot = require('../bot.js');
 
 const pagination = {};
+const state = {};
 
-pagination.saveData = (msgID, data, authorID) => {
-  bot.persistence[msgID] = {
-    pages: data,
+pagination.saveData = (msgID, pages, authorID, timeout) => {
+  state[msgID] = {
+    pages,
     authorID,
     pageNo: 0,
   };
-  return data;
+  setTimeout(() => delete pagination.state[msgID], timeout);
+  return pages;
 };
 
 pagination.addReactionButtons = (command) => {
@@ -17,7 +18,7 @@ pagination.addReactionButtons = (command) => {
 
   commandCopy.options.hooks = {
     postCommand: (msg, args, res) => {
-      bot.persistence[res.id] = bot.persistence[msg.id];
+      state[res.id] = state[msg.id];
     },
   };
 
@@ -28,15 +29,15 @@ pagination.addReactionButtons = (command) => {
       emoji: '⬅',
       type: 'edit',
       response: (msg, args, userID) => {
-        const persistence = bot.persistence[msg.id];
-        if (persistence.authorID !== userID) {
+        const messageState = state[msg.id];
+        if (messageState.authorID !== userID) {
           return;
         }
-        if (persistence.pageNo === 0) {
+        if (messageState.pageNo === 0) {
           return;
         }
-        bot.persistence[msg.id].pageNo -= 1;
-        return persistence.pages[(persistence.pageNo)];
+        state[msg.id].pageNo -= 1;
+        return messageState.pages[(messageState.pageNo)];
       },
     },
   );
@@ -46,15 +47,15 @@ pagination.addReactionButtons = (command) => {
       emoji: '➡',
       type: 'edit',
       response: (msg, args, userID) => {
-        const persistence = bot.persistence[msg.id];
-        if (persistence.authorID !== userID) {
+        const messageState = state[msg.id];
+        if (messageState.authorID !== userID) {
           return;
         }
-        if (persistence.pageNo === persistence.pages.length) {
+        if (messageState.pageNo === messageState.pages.length) {
           return;
         }
-        bot.persistence[msg.id].pageNo += 1;
-        return persistence.pages[(persistence.pageNo)];
+        state[msg.id].pageNo += 1;
+        return messageState.pages[(messageState.pageNo)];
       },
     },
   );
