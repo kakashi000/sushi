@@ -1,10 +1,10 @@
 /* eslint-disable consistent-return */
 /* eslint-disable no-param-reassign */
 /* eslint-disable prefer-destructuring */
-const bot = require('../bot.js');
 const kitsu = require('../common/kitsu_search.js');
 const pagination = require('../common/pagination.js');
-const config = require('../config/config.json');
+const generateKitsuEmbed = require('../common/kitsu_embed_generator.js');
+const bot = require('../bot.js');
 
 async function generateEmbeds(msg, args) {
   const response = await kitsu('anime', args.join(' '));
@@ -13,39 +13,9 @@ async function generateEmbeds(msg, args) {
     return 'Anime not found~';
   }
 
-  const embeds = response.body.data.map((anime, index, data) => ({
-    embed: {
-      title: 'Kitsu Anime Search',
-      description: `Page ${(index + 1)} out of ${(data.length)}`,
-      color: config.color,
-      author: {
-        icon_url: bot.user.avatarURL,
-      },
-      fields: [
-        {
-          name: 'Title',
-          value: anime.attributes.canonicalTitle,
-        },
-        {
-          name: 'Type',
-          value: anime.attributes.subtype,
-        },
-        {
-          name: 'Synopsis',
-          value: (anime.attributes.synopsis.length < 700)
-            ? anime.attributes.synopsis : `${anime.attributes.synopsis.substr(0, 700)}...`,
-        },
-      ],
-      thumbnail: {
-        url: anime.attributes.posterImage.small,
-      },
-      timestamp: new Date(),
-      footer: {
-        icon_url: msg.author.avatarURL,
-        text: `${msg.author.username} can tap the reaction buttons below to switch pages!`,
-      },
-    },
-  }));
+  const embeds = response.body.data.map((anime, index, data) => (
+    generateKitsuEmbed('Anime', anime, msg, (index + 1), data.length, bot)
+  ));
 
   return embeds;
 }

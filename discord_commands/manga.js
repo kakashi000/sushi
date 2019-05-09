@@ -1,10 +1,10 @@
 /* eslint-disable consistent-return */
 /* eslint-disable no-param-reassign */
 /* eslint-disable prefer-destructuring */
-const bot = require('../bot.js');
 const kitsu = require('../common/kitsu_search.js');
 const pagination = require('../common/pagination.js');
-const config = require('../config/config.json');
+const generateKitsuEmbed = require('../common/kitsu_embed_generator.js');
+const bot = require('../bot.js');
 
 async function generateEmbeds(msg, args) {
   const response = await kitsu('manga', args.join(' '));
@@ -13,39 +13,9 @@ async function generateEmbeds(msg, args) {
     return 'Manga not found~';
   }
 
-  const embeds = response.body.data.map((manga, index, data) => ({
-    embed: {
-      title: 'Kitsu Manga Search',
-      description: `Page ${(index + 1)} out of ${(data.length)}`,
-      color: config.color,
-      author: {
-        icon_url: bot.user.avatarURL,
-      },
-      fields: [
-        {
-          name: 'Title',
-          value: manga.attributes.canonicalTitle,
-        },
-        {
-          name: 'Type',
-          value: manga.attributes.subtype,
-        },
-        {
-          name: 'Synopsis',
-          value: (manga.attributes.synopsis.length < 700)
-            ? manga.attributes.synopsis : `${manga.attributes.synopsis.substr(0, 700)}...`,
-        },
-      ],
-      thumbnail: {
-        url: manga.attributes.posterImage.small,
-      },
-      timestamp: new Date(),
-      footer: {
-        icon_url: msg.author.avatarURL,
-        text: `${msg.author.username} can tap the reaction buttons below to switch pages!`,
-      },
-    },
-  }));
+  const embeds = response.body.data.map((manga, index, data) => (
+    generateKitsuEmbed('Manga', manga, msg, (index + 1), data.length, bot)
+  ));
 
   return embeds;
 }
@@ -66,7 +36,7 @@ command.action = async (msg, args) => {
 };
 
 command.options = {
-  aliases: ['m'],
+  aliases: ['m', 'mango'],
   cooldown: 3000,
   description: 'Search for an manga on Kitsu.io!',
   reactionButtonTimeout: 120000,
