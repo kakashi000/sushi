@@ -4,6 +4,7 @@
 const requireDir = require('require-dir');
 const bot = require('./bot.js');
 const storage = require('./config/storage.js');
+const pagination = require('./common/pagination.js');
 
 const commands = requireDir('./discord_commands');
 
@@ -52,8 +53,42 @@ bot.on('ready', async () => {
   console.log('Ready!');
 });
 
-bot.on('error', (err) => {
-  console.warn(err);
+function movePage(msg, emoji, userID) {
+  if (emoji.name !== '⬅' && emoji.name !== '➡') {
+    return;
+  }
+
+  if (!pagination.state[msg.id].pages) {
+    return;
+  }
+
+  const messageState = pagination.state[msg.id];
+
+  if (messageState.authorID !== userID) {
+    return;
+  }
+
+  if (emoji.name === '⬅') {
+    if (messageState.pageNo === 0) {
+      return;
+    }
+    pagination.state[msg.id].pageNo -= 1;
+  } else if (emoji.name === '➡') {
+    if ((messageState.pageNo + 1) === messageState.pages.length) {
+      return;
+    }
+    pagination.state[msg.id].pageNo += 1;
+  }
+
+  bot.editMessage(msg.channel.id, msg.id, messageState.pages[(messageState.pageNo)]);
+}
+
+bot.on('messageReactionAdd', (msg, emoji, userID) => {
+  movePage(msg, emoji, userID);
+});
+
+bot.on('messageReactionRemove', (msg, emoji, userID) => {
+  movePage(msg, emoji, userID);
 });
 
 bot.on('messageCreate', async (msg) => {
@@ -85,6 +120,10 @@ bot.on('messageCreate', async (msg) => {
   }
 
   return msg.channel.createMessage(`Say \`${bot.commandOptions.prefix[0]}help\` to see my commands!`);
+});
+
+bot.on('error', (err) => {
+  console.warn(err);
 });
 
 bot.connect();

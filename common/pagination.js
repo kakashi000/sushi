@@ -1,16 +1,18 @@
 /* eslint-disable arrow-body-style */
 /* eslint-disable consistent-return */
+const bot = require('../bot.js');
 
 const pagination = {};
-const state = {};
+
+pagination.state = {};
 
 pagination.saveData = (msgID, pages, authorID, timeout) => {
-  state[msgID] = {
+  pagination.state[msgID] = {
     pages,
     authorID,
     pageNo: 0,
   };
-  setTimeout(() => delete state[msgID], timeout);
+  setTimeout(() => delete pagination.state[msgID], timeout);
   return pages;
 };
 
@@ -19,48 +21,14 @@ pagination.addReactionButtons = (command) => {
 
   commandCopy.options.hooks = {
     postCommand: (msg, args, res) => {
-      state[res.id] = state[msg.id];
+      pagination.state[res.id] = pagination.state[msg.id];
+      if (!pagination.state[res.id]) {
+        return;
+      }
+      bot.addMessageReaction(res.channel.id, res.id, '⬅');
+      bot.addMessageReaction(res.channel.id, res.id, '➡');
     },
   };
-
-  commandCopy.options.reactionButtons = [];
-
-  commandCopy.options.reactionButtons.push(
-    {
-      emoji: '⬅',
-      type: 'edit',
-      response: (msg, args, userID) => {
-        const messageState = state[msg.id];
-        if (messageState.authorID !== userID) {
-          return;
-        }
-        if (messageState.pageNo === 0) {
-          return;
-        }
-        state[msg.id].pageNo -= 1;
-        return messageState.pages[(messageState.pageNo)];
-      },
-    },
-  );
-
-  commandCopy.options.reactionButtons.push(
-    {
-      emoji: '➡',
-      type: 'edit',
-      response: (msg, args, userID) => {
-        const messageState = state[msg.id];
-        if (messageState.authorID !== userID) {
-          return;
-        }
-        if (messageState.pageNo === messageState.pages.length) {
-          return;
-        }
-        state[msg.id].pageNo += 1;
-        return messageState.pages[(messageState.pageNo)];
-      },
-    },
-  );
-
   return commandCopy;
 };
 
