@@ -7,15 +7,15 @@ const pagination = require('../common/pagination.js');
 const config = require('../config/config.json');
 
 async function generateEmbeds(msg, args) {
-  const response = await kitsu('anime', args.join(' '));
+  const response = await kitsu('manga', args.join(' '));
 
   if (!response.body.data[0]) {
-    return 'Anime not found~';
+    return 'Manga not found~';
   }
 
-  const embeds = response.body.data.map((anime, index, data) => ({
+  const embeds = response.body.data.map((manga, index, data) => ({
     embed: {
-      title: 'Kitsu Anime Search',
+      title: 'Kitsu Manga Search',
       description: `Page ${(index + 1)} out of ${(data.length)}`,
       color: config.color,
       author: {
@@ -24,20 +24,20 @@ async function generateEmbeds(msg, args) {
       fields: [
         {
           name: 'Title',
-          value: anime.attributes.canonicalTitle,
+          value: manga.attributes.canonicalTitle,
         },
         {
           name: 'Type',
-          value: anime.attributes.subtype,
+          value: manga.attributes.subtype,
         },
         {
           name: 'Synopsis',
-          value: (anime.attributes.synopsis.length < 700)
-            ? anime.attributes.synopsis : `${anime.attributes.synopsis.substr(0, 700)}...`,
+          value: (manga.attributes.synopsis.length < 700)
+            ? manga.attributes.synopsis : `${manga.attributes.synopsis.substr(0, 700)}...`,
         },
       ],
       thumbnail: {
-        url: anime.attributes.posterImage.small,
+        url: manga.attributes.posterImage.small,
       },
       timestamp: new Date(),
       footer: {
@@ -52,13 +52,13 @@ async function generateEmbeds(msg, args) {
 
 const command = {};
 
-command.name = 'anime';
+command.name = 'manga';
 
 command.action = async (msg, args) => {
-  const animeEmbeds = await generateEmbeds(msg, args);
+  const mangaEmbeds = await generateEmbeds(msg, args);
   const data = pagination.saveData(
     msg.id,
-    animeEmbeds,
+    mangaEmbeds,
     msg.author.id,
     command.options.reactionButtonTimeout,
   );
@@ -66,11 +66,11 @@ command.action = async (msg, args) => {
 };
 
 command.options = {
-  aliases: ['a'],
+  aliases: ['m'],
   cooldown: 3000,
-  description: 'Search for an anime on Kitsu.io!',
+  description: 'Search for an manga on Kitsu.io!',
   reactionButtonTimeout: 120000,
-  usage: 'anime yuru yuri',
+  usage: 'manga yuru yuri',
 };
 
 module.exports = pagination.addReactionButtons(command);
