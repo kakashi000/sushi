@@ -58,7 +58,7 @@ function movePage(msg, emoji, userID) {
     return;
   }
 
-  if (!pagination.state[msg.id].pages) {
+  if (!pagination.state[msg.id] || !pagination.state[msg.id].pages) {
     return;
   }
 
