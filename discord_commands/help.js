@@ -8,7 +8,7 @@ const command = {};
 
 command.name = 'help';
 
-function generateHelpEmbeds(prefix) {
+function generateHelpEmbeds(prefix, msg) {
   const helpEmbeds = [];
 
   const commandArray = Object.keys(bot.commands).map(
@@ -33,8 +33,8 @@ function generateHelpEmbeds(prefix) {
         },
         timestamp: new Date(),
         footer: {
-          icon_url: bot.user.avatarURL,
-          text: 'made using the Eris library',
+          icon_url: msg.author.avatarURL,
+          text: `${msg.author.username} can tap the reaction buttons below to switch pages!`,
         },
         fields: [],
       },
@@ -71,7 +71,7 @@ command.action = async (msg, args) => {
   }
 
   if (!args[0]) {
-    const helpEmbeds = await generateHelpEmbeds(prefix);
+    const helpEmbeds = await generateHelpEmbeds(prefix, msg);
     const data = pagination.saveData(
       msg.id,
       helpEmbeds,
