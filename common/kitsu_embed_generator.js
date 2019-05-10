@@ -15,8 +15,8 @@ function generateEmbed(type, item, msg, currentPage, lastPage, bot) {
       fields: [
         {
           name: 'Title',
-          value: (item.attributes.subtype === '\n\n')
-            ? 'No title found.' : item.attributes.subtype,
+          value: (item.attributes.canonicalTitle === '\n\n')
+            ? 'No title found.' : item.attributes.canonicalTitle,
         },
         {
           name: 'Type',
