@@ -16,14 +16,24 @@ command.action = (msg) => {
         {
           name: 'Developer',
           value: '**kakashi**#0399',
+          inline: true,
         },
         {
           name: 'Library',
           value: '**Eris** 0.9.0',
+          inline: true,
         },
         {
           name: 'Git Repository',
           value: 'https://github.com/kakashi000/sushi',
+        },
+        {
+          name: 'Support Server',
+          value: 'https://discord.gg/XbVahqe',
+        },
+        {
+          name: 'Invite Bot',
+          value: 'https://discordapp.com/oauth2/authorize?client_id=561092137601597440&scope=bot',
         },
       ],
     },
