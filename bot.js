@@ -1,15 +1,10 @@
 const Eris = require('eris');
 const config = require('./config/config.json');
 
-const botOptions = {
-  defaultImageSize: 512,
-  restMode: false,
-};
+const botOptions = { defaultImageSize: 512 };
 
 const commandOptions = {
   prefix: ['s!'],
-  owner: 'kakashi',
-  description: 'a bot made using Eris',
   defaultHelpCommand: false,
 };
 
