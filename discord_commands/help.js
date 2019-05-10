@@ -1,3 +1,4 @@
+/* eslint-disable consistent-return */
 /* eslint-disable prefer-destructuring */
 const bot = require('../bot.js');
 const config = require('../config/config.json');
@@ -14,6 +15,13 @@ function generateHelpEmbeds(prefix, msg) {
   const commandArray = Object.keys(bot.commands).map(
     key => bot.commands[key],
   );
+
+  commandArray.filter((botCommand, index) => {
+    if (botCommand.hidden) {
+      commandArray.splice(index, 1);
+    }
+    return botCommand;
+  });
 
   const pageSize = 7;
   const commandArrays = [];
@@ -41,10 +49,6 @@ function generateHelpEmbeds(prefix, msg) {
     };
 
     arr.forEach((botCommand) => {
-      if (botCommand.hidden) {
-        return;
-      }
-
       helpEmbed.embed.fields.push({
         name: botCommand.label,
         value: `${botCommand.description}\n\`${prefix}${botCommand.usage}\``,
