@@ -146,4 +146,4 @@ command.options = {
   reactionButtonTimeout: 120000,
 };
 
-module.exports = pagination.addReactionButtons(command);
+module.exports = pagination.addReactionButtons(command, command.options.reactionButtonTimeout);

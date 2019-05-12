@@ -40,4 +40,4 @@ command.options = {
   usage: 'manga yuru yuri',
 };
 
-module.exports = pagination.addReactionButtons(command);
+module.exports = pagination.addReactionButtons(command, command.options.reactionButtonTimeout);
