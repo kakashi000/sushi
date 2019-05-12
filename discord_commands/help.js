@@ -30,10 +30,14 @@ function generateHelpEmbeds(prefix, msg) {
     commandArrays.push(commandArray.slice(i, i + pageSize));
   }
 
-  commandArrays.forEach((arr) => {
+  commandArrays.forEach((arr, index) => {
+    const currentPage = (index + 1);
+    const lastPage = commandArrays.length;
+
     const helpEmbed = {
       embed: {
-        description: '',
+        title: 'Commands',
+        description: `Page ${(currentPage)} out of ${(lastPage)}`,
         color: config.color,
         author: {
           name: bot.user.username,
