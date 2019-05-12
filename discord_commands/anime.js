@@ -1,6 +1,3 @@
-/* eslint-disable consistent-return */
-/* eslint-disable no-param-reassign */
-/* eslint-disable prefer-destructuring */
 const kitsu = require('../common/kitsu_search.js');
 const pagination = require('../common/pagination.js');
 const generateKitsuEmbed = require('../common/kitsu_embed_generator.js');

@@ -1,6 +1,3 @@
-/* eslint-disable prefer-destructuring */
-/* eslint-disable consistent-return */
-/* eslint-disable no-console */
 const requireDir = require('require-dir');
 const bot = require('./bot.js');
 const storage = require('./config/storage.js');

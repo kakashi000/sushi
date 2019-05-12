@@ -1,5 +1,3 @@
-/* eslint-disable consistent-return */
-/* eslint-disable prefer-destructuring */
 const bot = require('../bot.js');
 const config = require('../config/config.json');
 const storage = require('../config/storage.js');

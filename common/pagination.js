@@ -1,5 +1,3 @@
-/* eslint-disable arrow-body-style */
-/* eslint-disable consistent-return */
 const bot = require('../bot.js');
 
 const pagination = {};

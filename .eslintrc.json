@@ -1,6 +1,5 @@
 {
     "env": {
-        "browser": false,
         "commonjs": true,
         "es6": true
     },
@@ -13,5 +12,8 @@
         "ecmaVersion": 2018
     },
     "rules": {
+        "no-console": 0,
+        "prefer-destructuring": 0,
+        "consistent-return": 0
     }
 }

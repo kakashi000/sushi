@@ -1,5 +1,4 @@
 /* eslint-disable no-unused-vars */
-/* eslint-disable consistent-return */
 /* eslint-disable no-eval */
 const util = require('util');
 const config = require('../config/config.json');
