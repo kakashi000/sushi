@@ -32,7 +32,7 @@ command.action = (msg) => {
           value: 'https://discord.gg/XbVahqe',
         },
         {
-          name: 'Invite Bot',
+          name: 'Bot Invite Link',
           value: 'https://discordapp.com/oauth2/authorize?client_id=561092137601597440&scope=bot',
         },
       ],

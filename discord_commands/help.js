@@ -106,32 +106,35 @@ command.action = async (msg, args) => {
 
   let commandName = args[0];
 
-  // check if there's a command for the given name/alias
   if (!bot.commandAliases[commandName] && !bot.commands[commandName]) {
     return msg.channel.createMessage(`Command not found. Type ${prefix}help to see my commands~`);
   }
 
-  // if commandName is an alias, replace it with the corresponding command name
   if (bot.commandAliases[commandName]) {
     commandName = bot.commandAliases[commandName];
   }
 
   const botCommand = bot.commands[commandName];
 
-  // get command data using the command name
+  const description = botCommand.fullDescription !== 'No full description'
+    ? botCommand.fullDescription.replace(/\{prefix\}/g, prefix)
+    : botCommand.description;
+
   const commandHelpEmbed = {
     embed: {
       color: config.color,
       title: commandName,
-      description: botCommand.description,
+      description,
       fields: [
         {
           name: 'Aliases',
           value: `\`${botCommand.aliases.join('`, `')}\``,
+          inline: true,
         },
         {
-          name: 'Usage',
+          name: 'Example Usage',
           value: `\`${prefix}${botCommand.usage}\``,
+          inline: true,
         },
       ],
     },
@@ -159,6 +162,13 @@ command.options = {
   aliases: ['h', 'commands'],
   cooldown: 1000,
   description: 'Diplay the help message, or get more information on a command!',
+  fullDescription: `
+Displays the help message. \`{prefix}help\` sends the list of commands.
+
+You can also type \`{prefix}help 2\` to start at the second page and so on. This is especially useful for cases when the bot does not have the permissions to add reaction buttons.
+
+Type \`{prefix}help name\` to view detailed information on specific commands.
+  `,
   usage: 'help translate',
   reactionButtonTimeout: 120000,
 };

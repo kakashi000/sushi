@@ -34,9 +34,9 @@ command.action = async (msg, args) => {
 command.options = {
   aliases: ['m', 'mango'],
   cooldown: 3000,
-  description: 'Search for an manga on Kitsu.io!',
+  description: 'Search for a manga on Kitsu.io!',
   reactionButtonTimeout: 120000,
-  usage: 'manga yuru yuri',
+  usage: 'manga berserks',
 };
 
 module.exports = pagination.addReactionButtons(command, command.options.reactionButtonTimeout);

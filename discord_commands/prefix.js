@@ -27,12 +27,23 @@ command.action = async (msg, args) => {
 command.options = {
   aliases: ['pr'],
   cooldown: 1000,
-  description: 'Sets the guild prefix!',
+  description: 'Sets the guild\'s command prefixes!',
+  fullDescription: `
+Sets the guild's command prefixes. \`{prefix}prefix =\` sets the current prefixes setting to \`=\`.
+
+You can give the command a space-separated list to set multiple prefixes, like so:
+\`{prefix}prefix > = s!\`
+
+The bot will recognize all three (>, =, and -) as valid prefixes, and you can use them normally;
+\`>help\`, \`=help\`, and \`s!help\` will all work.
+
+You can also type \`{prefix}prefix\` alone to check the current setting.
+  `,
   guildOnly: true,
   requirements: {
     permissions: { administrator: true },
   },
-  usage: 'prefix - /',
+  usage: 'prefix >',
 };
 
 module.exports = command;
