@@ -79,10 +79,9 @@ command.action = async (msg, args) => {
     prefix = bot.commandOptions.prefix[0];
   }
 
-  // check if the first argument is a single digit
-
   let pageNumber;
   if (args[0]) {
+    // get the first argument if is a single digit
     pageNumber = (args[0].match(/^\d$/) - 1);
   }
 
@@ -96,11 +95,13 @@ command.action = async (msg, args) => {
       pageNumber,
     );
 
+    if (!args[0]) {
+      return msg.channel.createMessage(helpEmbeds[0]);
+    }
+
     if (helpEmbeds[pageNumber]) {
       return msg.channel.createMessage(helpEmbeds[pageNumber]);
     }
-
-    return msg.channel.createMessage(helpEmbeds[0]);
   }
 
   let commandName = args[0];
