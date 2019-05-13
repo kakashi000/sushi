@@ -1,7 +1,6 @@
 const kitsu = require('../common/kitsu_search.js');
 const pagination = require('../common/pagination.js');
 const generateKitsuEmbed = require('../common/kitsu_embed_generator.js');
-const bot = require('../bot.js');
 
 async function generateEmbeds(msg, args) {
   const response = await kitsu('anime', args.join(' '));
@@ -11,7 +10,7 @@ async function generateEmbeds(msg, args) {
   }
 
   const embeds = response.body.data.map((anime, index, data) => (
-    generateKitsuEmbed('Anime', anime, msg, (index + 1), data.length, bot)
+    generateKitsuEmbed('Anime', anime, msg, (index + 1), data.length)
   ));
 
   return embeds;

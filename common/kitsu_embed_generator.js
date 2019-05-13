@@ -1,13 +1,17 @@
 const config = require('../config/config.json');
+const bot = require('../bot.js');
 
-function generateEmbed(type, item, msg, currentPage, lastPage, bot) {
+function generateEmbed(type, item, msg, currentPage, lastPage) {
+  const hasAddReactionsPermission = msg.channel.permissionsOf(bot.user.id).has('addReactions');
+
   const synopsis = (item.attributes.synopsis.length < 700)
     ? item.attributes.synopsis : `${item.attributes.synopsis.substr(0, 700)}...`;
 
   const embed = {
     embed: {
       title: `Kitsu ${type} Search`,
-      description: `Page ${(currentPage)} out of ${(lastPage)}`,
+      description: hasAddReactionsPermission
+        ? `Page ${(currentPage)} out of ${(lastPage)}` : '',
       color: config.color,
       author: {
         icon_url: bot.user.avatarURL,
@@ -35,7 +39,9 @@ function generateEmbed(type, item, msg, currentPage, lastPage, bot) {
       timestamp: new Date(),
       footer: {
         icon_url: msg.author.avatarURL,
-        text: `${msg.author.username} can tap the reaction buttons below to switch pages!`,
+        text: hasAddReactionsPermission
+          ? `${msg.author.username} can tap the reaction buttons below to switch pages!`
+          : 'Powered by Kitsu.io',
       },
     },
   };

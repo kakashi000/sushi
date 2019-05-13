@@ -29,6 +29,7 @@ function generateHelpEmbeds(prefix, msg) {
   }
 
   commandArrays.forEach((arr, index) => {
+    const hasAddReactionsPermission = msg.channel.permissionsOf(bot.user.id).has('addReactions');
     const currentPage = (index + 1);
     const lastPage = commandArrays.length;
 
@@ -44,7 +45,9 @@ function generateHelpEmbeds(prefix, msg) {
         timestamp: new Date(),
         footer: {
           icon_url: msg.author.avatarURL,
-          text: `${msg.author.username} can tap the reaction buttons below to switch pages!`,
+          text: hasAddReactionsPermission
+            ? `${msg.author.username} can tap the reaction buttons below to switch pages!`
+            : 'Type help [page] to view other commands!',
         },
         fields: [],
       },
@@ -76,15 +79,28 @@ command.action = async (msg, args) => {
     prefix = bot.commandOptions.prefix[0];
   }
 
-  if (!args[0]) {
+  // check if the first argument is a single digit
+
+  let pageNumber;
+  if (args[0]) {
+    pageNumber = (args[0].match(/^\d$/) - 1);
+  }
+
+  if (!args[0] || pageNumber) {
     const helpEmbeds = await generateHelpEmbeds(prefix, msg);
-    const data = pagination.saveData(
+    pagination.saveData(
       msg.id,
       helpEmbeds,
       msg.author.id,
       command.options.reactionButtonTimeout,
+      pageNumber,
     );
-    return msg.channel.createMessage(data[0]);
+
+    if (helpEmbeds[pageNumber]) {
+      return msg.channel.createMessage(helpEmbeds[pageNumber]);
+    }
+
+    return msg.channel.createMessage(helpEmbeds[0]);
   }
 
   let commandName = args[0];
