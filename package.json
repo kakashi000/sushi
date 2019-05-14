@@ -19,6 +19,7 @@
     "fpersist": "0.0.1",
     "gif-search": "^2.0.1",
     "got": "^9.6.0",
+    "kitsu": "^7.0.3",
     "node-persist": "^3.0.4",
     "require-dir": "^1.2.0",
     "require-reload": "^0.2.2",
