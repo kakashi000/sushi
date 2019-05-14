@@ -32,6 +32,7 @@ command.action = async (msg, args) => {
 };
 
 command.options = {
+  argsRequired: true,
   aliases: ['a'],
   cooldown: 3000,
   description: 'Search for an anime on Kitsu.io!',

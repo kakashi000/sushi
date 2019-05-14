@@ -13,8 +13,9 @@ command.action = async (msg, args) => {
 
 command.options = {
   aliases: ['giphy'],
+  argsRequired: true,
   cooldown: 3000,
-  description: 'Search for a GIF using Giphy!',
+  description: 'Search for a random GIF using Giphy!',
   usage: 'gif anime cute',
 };
 

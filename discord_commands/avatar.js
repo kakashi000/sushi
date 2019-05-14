@@ -11,6 +11,7 @@ command.action = (msg, args) => {
 
 command.options = {
   aliases: ['av', 'pfp'],
+  argsRequired: true,
   cooldown: 3000,
   description: 'Get the URL of a user\'s avatar!',
   usage: 'avatar @sushi',

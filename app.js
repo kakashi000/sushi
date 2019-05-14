@@ -25,6 +25,16 @@ bot.on('ready', async () => {
       options.cooldownReturns = 1;
     }
 
+    if (options.argsRequired) {
+      options.invalidUsageMessage = (msg) => {
+        const parts = msg.content.split(' ').map(s => s.trim()).filter(s => s);
+        const args = parts.slice(1);
+        if (!args[0]) {
+          commands.help.action(msg, [key]);
+        }
+      };
+    }
+
     bot.registerCommand(key, commands[key].action, options);
   });
 

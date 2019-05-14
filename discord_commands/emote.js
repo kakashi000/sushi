@@ -17,6 +17,7 @@ command.action = async (msg, args) => {
 
 command.options = {
   aliases: ['se'],
+  argsRequired: true,
   cooldown: 3000,
   description: 'Get the full image of one or more custom emotes!',
   usage: 'se :customEmote:',

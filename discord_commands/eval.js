@@ -29,6 +29,7 @@ command.action = async (msg, args) => {
 
 command.options = {
   aliases: ['evaluate'],
+  argsRequired: true,
   cooldown: 0,
   description: 'Evaluate some JavaScript!',
   usage: 'eval Math.Random()',

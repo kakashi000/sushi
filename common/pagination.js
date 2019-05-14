@@ -19,6 +19,10 @@ pagination.addReactionButtons = (command, timeout) => {
 
   commandCopy.options.hooks = {
     postCommand: (msg, args, res) => {
+      if (!res) {
+        return;
+      }
+
       pagination.state[res.id] = pagination.state[msg.id];
       setTimeout(() => delete pagination.state[res.id], timeout);
 

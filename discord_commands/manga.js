@@ -33,6 +33,7 @@ command.action = async (msg, args) => {
 
 command.options = {
   aliases: ['m', 'mango'],
+  argsRequired: true,
   cooldown: 3000,
   description: 'Search for a manga on Kitsu.io!',
   reactionButtonTimeout: 120000,
