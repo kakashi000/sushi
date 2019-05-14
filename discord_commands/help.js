@@ -47,7 +47,7 @@ function generateHelpEmbeds(prefix, msg) {
           icon_url: msg.author.avatarURL,
           text: hasAddReactionsPermission
             ? `${msg.author.username} can tap the reaction buttons below to switch pages!`
-            : 'Type help [page] to view other commands!',
+            : 'Type help [page] to view the other pages!',
         },
         fields: [],
       },
@@ -81,8 +81,10 @@ command.action = async (msg, args) => {
 
   let pageNumber;
   if (args[0]) {
-    // get the first argument if is a single digit
-    pageNumber = (args[0].match(/^\d$/) - 1);
+    // regex for single digits
+    pageNumber = /^\d$/.test(args[0])
+      ? args[0] - 1
+      : undefined;
   }
 
   if (!args[0] || pageNumber) {
@@ -167,7 +169,7 @@ Displays the help message. \`{prefix}help\` sends the list of commands.
 
 You can also type \`{prefix}help 2\` to start at the second page and so on. This is especially useful for cases when the bot does not have the permissions to add reaction buttons.
 
-Type \`{prefix}help name\` to view detailed information on specific commands.
+Type \`{prefix}help command\` to view detailed information on specific commands.
   `,
   usage: 'help translate',
   reactionButtonTimeout: 120000,
