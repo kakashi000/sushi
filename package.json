@@ -18,6 +18,7 @@
     "eris": "https://github.com/noahm/eris.git#patch-1",
     "fpersist": "0.0.1",
     "gif-search": "^2.0.1",
+    "googleapis": "^40.0.0",
     "got": "^9.6.0",
     "kitsu": "^7.0.3",
     "node-persist": "^3.0.4",
