@@ -54,9 +54,21 @@ function generateEmbed(type, item, msg, currentPage, lastPage) {
   if (type === 'Character') {
     const name = item.canonicalName;
 
-    const description = item.description.length < 700
-      ? item.description
-      : `${item.description.substr(0, 700)}...`;
+    let description = item.description;
+    if (description.length > 700) {
+      description = `${description.substring(0, 700)}...`;
+    }
+
+    const openingSpanCount = (description.match(/<span class="spoiler">/g) || []).length;
+    const closingSpanCount = (description.match(/<\/span>/g) || []).length;
+    if (openingSpanCount !== closingSpanCount) {
+      description += '</span>';
+    }
+
+    const brRegex = new RegExp('<brs*/?>', 'mg');
+    const spoilerRegex = new RegExp('</?span( )?(class="spoiler")?>', 'mg');
+    description = description.replace(brRegex, '\n');
+    description = description.replace(spoilerRegex, '||');
 
     const embed = {
       embed: {
