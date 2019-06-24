@@ -41,7 +41,7 @@ bot.on('ready', async () => {
     }
 
     options.hooks.postExecution = (msg) => {
-      logData(msg.author, key);
+      logData(msg, msg.author, key);
     };
 
     bot.registerCommand(key, commands[key].action, options);
