@@ -1,5 +1,4 @@
-const storage = require('../config/storage.js');
-const bot = require('../bot.js');
+const { setPrefix, getPrefix } = require('../util/prefix_manager.js');
 
 const command = {};
 
@@ -7,20 +6,17 @@ command.name = 'prefix';
 
 command.action = async (msg, args) => {
   if (!args[0]) {
-    const guild = await storage.getItem(msg.channel.guild.id, {});
-    if (guild.prefix.length === 1) {
-      return msg.channel.createMessage(`The prefix is set to \`${guild.prefix}\``);
+    const prefix = await getPrefix(msg.channel.guild.id);
+
+    if (prefix.length === 1) {
+      return msg.channel.createMessage(`The prefix is set to \`${prefix}\``);
     }
-    return msg.channel.createMessage(`Prefixes are set to \`${guild.prefix}\``);
+
+    return msg.channel.createMessage(`Prefixes are set to \`${prefix}\``);
   }
 
-  bot.registerGuildPrefix(msg.channel.guild.id, args);
-  // save guild prefix data to storage
-  await storage.editItem(msg.channel.guild.id, (guildConfig) => {
-    const guild = guildConfig;
-    guild.prefix = args;
-    return guild;
-  }, {});
+  await setPrefix(msg.channel.guild, args);
+
   return msg.channel.createMessage(`The guild prefix is now set to \`${args.join(' ')}\`.`);
 };
 

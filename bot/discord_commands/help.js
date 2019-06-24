@@ -1,7 +1,7 @@
 const bot = require('../bot.js');
 const config = require('../config/config.json');
-const storage = require('../config/storage.js');
 const pagination = require('../common/pagination.js');
+const { getPrefix } = require('../util/prefix_manager.js');
 
 const command = {};
 
@@ -18,6 +18,7 @@ function generateHelpEmbeds(prefix, msg) {
     if (botCommand.hidden) {
       commandArray.splice(index, 1);
     }
+
     return botCommand;
   });
 
@@ -67,19 +68,10 @@ function generateHelpEmbeds(prefix, msg) {
 }
 
 command.action = async (msg, args) => {
-  let prefix;
-  if (msg.channel.guild) {
-    const guild = await storage.getItem(msg.channel.guild.id, {});
-    if (guild.prefix) {
-      prefix = guild.prefix[0];
-    } else {
-      prefix = bot.commandOptions.prefix[0];
-    }
-  } else {
-    prefix = bot.commandOptions.prefix[0];
-  }
+  const prefix = await getPrefix(msg.channel.guild.id);
 
   let pageNumber;
+
   if (args[0]) {
     // regex for single digits
     pageNumber = /^\d$/.test(args[0])
@@ -89,6 +81,7 @@ command.action = async (msg, args) => {
 
   if (!args[0] || pageNumber) {
     const helpEmbeds = await generateHelpEmbeds(prefix, msg);
+
     pagination.saveData(
       msg.id,
       helpEmbeds,
@@ -146,9 +139,11 @@ command.action = async (msg, args) => {
 
   if (permissions.length !== 0) {
     const permissionsList = [];
+
     Object.keys(permissions).forEach((key) => {
       permissionsList.push(key);
     });
+
     if (permissionsList[0]) {
       commandHelpEmbed.embed.fields.push({
         name: 'Requirements',
