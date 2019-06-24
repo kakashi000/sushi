@@ -2,6 +2,7 @@ const requireDir = require('require-dir');
 const bot = require('./bot.js');
 const storage = require('./config/storage.js');
 const pagination = require('./common/pagination.js');
+const logData = require('./util/logger.js');
 
 const commands = requireDir('./discord_commands');
 
@@ -11,6 +12,10 @@ bot.on('ready', async () => {
   // register bot commands
   Object.keys(commands).forEach((key) => {
     const options = commands[key].options;
+
+    if (!options.hooks) {
+      options.hooks = {};
+    }
 
     // add the default errorMessage if the command doesn't have one
     if (!options.errorMessage) {
@@ -35,10 +40,12 @@ bot.on('ready', async () => {
       };
     }
 
+    options.hooks.postExecution = (msg) => {
+      logData(msg.author, key);
+    };
+
     bot.registerCommand(key, commands[key].action, options);
   });
-
-  //
 
   // register guild prefixes
   const guilds = Array.from(bot.guilds.values());

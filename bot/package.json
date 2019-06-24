@@ -22,6 +22,7 @@
     "got": "^9.6.0",
     "kitsu": "^7.0.3",
     "node-persist": "^3.0.4",
+    "pg": "^7.11.0",
     "require-dir": "^1.2.0",
     "require-reload": "^0.2.2",
     "unofficial-jisho-api": "^1.3.0"
