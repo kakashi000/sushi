@@ -1,6 +1,6 @@
 const bot = require('../bot.js');
 const config = require('../config/config.json');
-const pagination = require('../common/pagination.js');
+const { saveData, addReactionButtons } = require('../common/pagination.js');
 const { getPrefix } = require('../util/prefix_manager.js');
 
 const command = {};
@@ -82,7 +82,7 @@ command.action = async (msg, args) => {
   if (!args[0] || pageNumber) {
     const helpEmbeds = await generateHelpEmbeds(prefix, msg);
 
-    pagination.saveData(
+    saveData(
       msg.id,
       helpEmbeds,
       msg.author.id,
@@ -170,4 +170,4 @@ Type \`{prefix}help command\` to view detailed information on specific commands.
   reactionButtonTimeout: 120000,
 };
 
-module.exports = pagination.addReactionButtons(command, command.options.reactionButtonTimeout);
+module.exports = addReactionButtons(command, command.options.reactionButtonTimeout);

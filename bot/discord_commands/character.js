@@ -1,5 +1,5 @@
 const Kitsu = require('kitsu');
-const pagination = require('../common/pagination.js');
+const { saveData, addReactionButtons } = require('../common/pagination.js');
 const generateKitsuEmbed = require('../common/kitsu_embed_generator.js');
 
 const api = new Kitsu();
@@ -25,7 +25,7 @@ async function generateEmbeds(msg, args) {
 
 command.action = async (msg, args) => {
   const characterEmbeds = await generateEmbeds(msg, args);
-  const data = pagination.saveData(
+  const data = saveData(
     msg.id,
     characterEmbeds,
     msg.author.id,
@@ -43,4 +43,4 @@ command.options = {
   usage: 'char saitama',
 };
 
-module.exports = pagination.addReactionButtons(command, command.options.reactionButtonTimeout);
+module.exports = addReactionButtons(command, command.options.reactionButtonTimeout);

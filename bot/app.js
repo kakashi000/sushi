@@ -1,7 +1,7 @@
 const requireDir = require('require-dir');
 const bot = require('./bot.js');
-const pagination = require('./common/pagination.js');
 const logData = require('./util/logger.js');
+const { movePage } = require('./common/pagination.js');
 const { getGuildPrefixes, getPrefix } = require('./util/prefix_manager.js');
 
 const commands = requireDir('./discord_commands');
@@ -57,38 +57,6 @@ bot.on('ready', async () => {
 
   console.log('Ready!');
 });
-
-function movePage(msg, emoji, userID) {
-  if (emoji.name !== '⬅' && emoji.name !== '➡') {
-    return;
-  }
-
-  if (!pagination.state[msg.id] || !pagination.state[msg.id].pages) {
-    return;
-  }
-
-  const messageState = pagination.state[msg.id];
-
-  if (messageState.authorID !== userID) {
-    return;
-  }
-
-  if (emoji.name === '⬅') {
-    if (messageState.pageNo === 0) {
-      return;
-    }
-
-    pagination.state[msg.id].pageNo -= 1;
-  } else if (emoji.name === '➡') {
-    if ((messageState.pageNo + 1) === messageState.pages.length) {
-      return;
-    }
-
-    pagination.state[msg.id].pageNo += 1;
-  }
-
-  bot.editMessage(msg.channel.id, msg.id, messageState.pages[(messageState.pageNo)]);
-}
 
 bot.on('messageReactionAdd', (msg, emoji, userID) => {
   movePage(msg, emoji, userID);

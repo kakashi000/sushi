@@ -1,5 +1,5 @@
 const kitsu = require('../common/kitsu_search.js');
-const pagination = require('../common/pagination.js');
+const { saveData, addReactionButtons } = require('../common/pagination.js');
 const generateKitsuEmbed = require('../common/kitsu_embed_generator.js');
 
 async function generateEmbeds(msg, args) {
@@ -22,7 +22,7 @@ command.name = 'anime';
 
 command.action = async (msg, args) => {
   const animeEmbeds = await generateEmbeds(msg, args);
-  const data = pagination.saveData(
+  const data = saveData(
     msg.id,
     animeEmbeds,
     msg.author.id,
@@ -40,4 +40,4 @@ command.options = {
   usage: 'anime yuru yuri',
 };
 
-module.exports = pagination.addReactionButtons(command, command.options.reactionButtonTimeout);
+module.exports = addReactionButtons(command, command.options.reactionButtonTimeout);

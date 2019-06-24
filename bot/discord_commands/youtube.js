@@ -1,6 +1,6 @@
 const { google } = require('googleapis');
 const config = require('../config/config.json');
-const pagination = require('../common/pagination.js');
+const { saveData, addReactionButtons } = require('../common/pagination.js');
 const bot = require('../bot.js');
 
 const command = {};
@@ -37,7 +37,7 @@ async function generateLinks(msg, query) {
 
 command.action = async (msg, args) => {
   const links = await generateLinks(msg, args.join(' '));
-  pagination.saveData(
+  saveData(
     msg.id,
     links,
     msg.author.id,
@@ -55,4 +55,4 @@ command.options = {
   reactionButtonTimeout: 120000,
 };
 
-module.exports = pagination.addReactionButtons(command, command.options.reactionButtonTimeout);
+module.exports = addReactionButtons(command, command.options.reactionButtonTimeout);
