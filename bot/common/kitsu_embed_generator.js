@@ -1,7 +1,12 @@
+const Kitsu = require('kitsu');
 const config = require('../config/config.json');
 const bot = require('../bot.js');
 
-function generateEmbed(type, item, msg, currentPage, lastPage) {
+const api = new Kitsu();
+
+const embedGenerator = {};
+
+embedGenerator.generateKitsuEmbed = (type, item, msg, currentPage, lastPage) => {
   const hasAddReactionsPermission = msg.channel.permissionsOf(bot.user.id).has('addReactions');
 
   if (type === 'Anime' || type === 'Manga') {
@@ -105,6 +110,24 @@ function generateEmbed(type, item, msg, currentPage, lastPage) {
     };
     return embed;
   }
-}
+};
 
-module.exports = generateEmbed;
+embedGenerator.generateEmbeds = async (type, msg, args) => {
+  const response = await api.get(type, {
+    filter: {
+      name: args.join(' '),
+    },
+  });
+
+  if (!response.data[0]) {
+    return;
+  }
+
+  const embeds = response.data.map((item, index, data) => (
+    embedGenerator.generateKitsuEmbed(type, item, msg, (index + 1), data.length)
+  ));
+
+  return embeds;
+};
+
+module.exports = embedGenerator;

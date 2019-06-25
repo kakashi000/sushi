@@ -1,36 +1,22 @@
-const Kitsu = require('kitsu');
 const { saveData, addReactionButtons } = require('../common/pagination.js');
-const generateKitsuEmbed = require('../common/kitsu_embed_generator.js');
+const { generateEmbeds } = require('../common/kitsu_embed_generator.js');
 
-const api = new Kitsu();
 const command = {};
 
-async function generateEmbeds(msg, args) {
-  const response = await api.get('characters', {
-    filter: {
-      name: args.join(' '),
-    },
-  });
+command.action = async (msg, args) => {
+  const embeds = await generateEmbeds('Character', msg, args);
 
-  if (!response.data[0]) {
-    return 'Character not found~';
+  if (!embeds) {
+    return msg.channel.createMessage('Character not found~');
   }
 
-  const embeds = response.data.map((character, index, data) => (
-    generateKitsuEmbed('Character', character, msg, (index + 1), data.length)
-  ));
-
-  return embeds;
-}
-
-command.action = async (msg, args) => {
-  const characterEmbeds = await generateEmbeds(msg, args);
   const data = saveData(
     msg.id,
-    characterEmbeds,
+    embeds,
     msg.author.id,
     command.options.reactionButtonTimeout,
   );
+
   return msg.channel.createMessage(data[0]);
 };
 
