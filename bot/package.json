@@ -17,6 +17,7 @@
   "dependencies": {
     "eris": "https://github.com/noahm/eris.git#patch-1",
     "gif-search": "^2.0.1",
+    "glob": "^7.1.4",
     "googleapis": "^40.0.0",
     "got": "^9.6.0",
     "kitsu": "^7.0.3",

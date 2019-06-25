@@ -3,6 +3,8 @@ const { generateEmbeds } = require('../common/kitsu_embed_generator.js');
 
 const command = {};
 
+command.name = 'character';
+
 command.action = async (msg, args) => {
   const embeds = await generateEmbeds('Character', msg, args);
 

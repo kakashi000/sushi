@@ -1,49 +1,10 @@
-const requireDir = require('require-dir');
 const bot = require('./bot.js');
-const logData = require('./util/logger.js');
+const loadCommands = require('./util/command_loader.js');
 const { movePage } = require('./common/pagination.js');
 const { getGuildPrefixes, getPrefix } = require('./util/prefix_manager.js');
 
-const commands = requireDir('./discord_commands');
-
 bot.on('ready', async () => {
-  const errorMessage = 'Something went wrong with that command.';
-
-  Object.keys(commands).forEach((key) => {
-    const options = commands[key].options;
-
-    if (!options.hooks) {
-      options.hooks = {};
-    }
-
-    if (!options.errorMessage) {
-      options.errorMessage = errorMessage;
-    }
-
-    if (!options.cooldownMessage) {
-      options.cooldownMessage = `That command has a ${(options.cooldown / 1000)} second cooldown.`;
-    }
-
-    if (!options.cooldownReturns) {
-      options.cooldownReturns = 1;
-    }
-
-    if (options.argsRequired) {
-      options.invalidUsageMessage = (msg) => {
-        const parts = msg.content.split(' ').map(s => s.trim()).filter(s => s);
-        const args = parts.slice(1);
-        if (!args[0]) {
-          commands.help.action(msg, [key]);
-        }
-      };
-    }
-
-    options.hooks.postExecution = (msg) => {
-      logData(msg, msg.author, key);
-    };
-
-    bot.registerCommand(key, commands[key].action, options);
-  });
+  loadCommands();
 
   const guildPrefixes = await getGuildPrefixes();
 

@@ -3,6 +3,8 @@ const config = require('../config/config.json');
 
 const command = {};
 
+command.name = 'about';
+
 command.action = (msg) => {
   const aboutEmbed = {
     embed: {
