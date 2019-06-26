@@ -5,6 +5,7 @@ const command = {
     if (!args[0]) {
       return msg.channel.createMessage(msg.author.avatarURL);
     }
+
     return msg.channel.createMessage(msg.mentions[0].avatarURL);
   },
 

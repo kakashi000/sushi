@@ -39,7 +39,7 @@ const command = {
         ],
       },
     };
-  
+
     return msg.channel.createMessage(aboutEmbed);
   },
 
