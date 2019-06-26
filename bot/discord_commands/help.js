@@ -3,11 +3,7 @@ const config = require('../config/config.json');
 const { saveData, addReactionButtons } = require('../common/pagination.js');
 const { getPrefix } = require('../util/prefix_manager.js');
 
-const command = {};
-
-command.name = 'help';
-
-function generateHelpEmbeds(prefix, msg) {
+const generateHelpEmbeds = (prefix, msg) => {
   const helpEmbeds = [];
 
   const commandArray = Object.keys(bot.commands).map(
@@ -65,109 +61,113 @@ function generateHelpEmbeds(prefix, msg) {
   });
 
   return helpEmbeds;
-}
-
-command.action = async (msg, args) => {
-  const prefix = await getPrefix(msg.channel.guild.id);
-
-  let pageNumber;
-
-  if (args[0]) {
-    // regex for single digits
-    pageNumber = /^\d$/.test(args[0])
-      ? args[0] - 1
-      : undefined;
-  }
-
-  if (!args[0] || pageNumber) {
-    const helpEmbeds = await generateHelpEmbeds(prefix, msg);
-
-    saveData(
-      msg.id,
-      helpEmbeds,
-      msg.author.id,
-      command.options.reactionButtonTimeout,
-      pageNumber,
-    );
-
-    if (!args[0]) {
-      return msg.channel.createMessage(helpEmbeds[0]);
-    }
-
-    if (helpEmbeds[pageNumber]) {
-      return msg.channel.createMessage(helpEmbeds[pageNumber]);
-    }
-  }
-
-  let commandName = args[0];
-
-  if (!bot.commandAliases[commandName] && !bot.commands[commandName]) {
-    return msg.channel.createMessage(`Command not found. Type ${prefix}help to see my commands~`);
-  }
-
-  if (bot.commandAliases[commandName]) {
-    commandName = bot.commandAliases[commandName];
-  }
-
-  const botCommand = bot.commands[commandName];
-
-  const description = botCommand.fullDescription !== 'No full description'
-    ? botCommand.fullDescription.replace(/\{prefix\}/g, prefix)
-    : botCommand.description;
-
-  const commandHelpEmbed = {
-    embed: {
-      color: config.color,
-      title: commandName,
-      description,
-      fields: [
-        {
-          name: 'Aliases',
-          value: `\`${botCommand.aliases.join('`, `')}\``,
-          inline: true,
-        },
-        {
-          name: 'Example Usage',
-          value: `\`${prefix}${botCommand.usage}\``,
-          inline: true,
-        },
-      ],
-    },
-  };
-
-  const permissions = botCommand.requirements.permissions;
-
-  if (permissions.length !== 0) {
-    const permissionsList = [];
-
-    Object.keys(permissions).forEach((key) => {
-      permissionsList.push(key);
-    });
-
-    if (permissionsList[0]) {
-      commandHelpEmbed.embed.fields.push({
-        name: 'Requirements',
-        value: `\`${permissionsList.join('`, `')}\``,
-      });
-    }
-  }
-
-  return msg.channel.createMessage(commandHelpEmbed);
 };
 
-command.options = {
-  aliases: ['h', 'commands'],
-  cooldown: 1000,
-  description: 'Diplay the help message, or get more information on a command!',
-  fullDescription: `
-Displays the help message. \`{prefix}help\` sends the list of commands.
+const command = {
+  name: 'help',
 
-You can also type \`{prefix}help 2\` to start at the second page and so on. This is especially useful for cases when the bot does not have the permissions to add reaction buttons.
+  action: async (msg, args) => {
+    const prefix = await getPrefix(msg.channel.guild.id);
 
-Type \`{prefix}help command\` to view detailed information on specific commands.
-  `,
-  usage: 'help translate',
-  reactionButtonTimeout: 120000,
+    let pageNumber;
+
+    if (args[0]) {
+      // regex for single digits
+      pageNumber = /^\d$/.test(args[0])
+        ? args[0] - 1
+        : undefined;
+    }
+
+    if (!args[0] || pageNumber) {
+      const helpEmbeds = await generateHelpEmbeds(prefix, msg);
+
+      saveData(
+        msg.id,
+        helpEmbeds,
+        msg.author.id,
+        command.options.reactionButtonTimeout,
+        pageNumber,
+      );
+
+      if (!args[0]) {
+        return msg.channel.createMessage(helpEmbeds[0]);
+      }
+
+      if (helpEmbeds[pageNumber]) {
+        return msg.channel.createMessage(helpEmbeds[pageNumber]);
+      }
+    }
+
+    let commandName = args[0];
+
+    if (!bot.commandAliases[commandName] && !bot.commands[commandName]) {
+      return msg.channel.createMessage(`Command not found. Type ${prefix}help to see my commands~`);
+    }
+
+    if (bot.commandAliases[commandName]) {
+      commandName = bot.commandAliases[commandName];
+    }
+
+    const botCommand = bot.commands[commandName];
+
+    const description = botCommand.fullDescription !== 'No full description'
+      ? botCommand.fullDescription.replace(/\{prefix\}/g, prefix)
+      : botCommand.description;
+
+    const commandHelpEmbed = {
+      embed: {
+        color: config.color,
+        title: commandName,
+        description,
+        fields: [
+          {
+            name: 'Aliases',
+            value: `\`${botCommand.aliases.join('`, `')}\``,
+            inline: true,
+          },
+          {
+            name: 'Example Usage',
+            value: `\`${prefix}${botCommand.usage}\``,
+            inline: true,
+          },
+        ],
+      },
+    };
+
+    const permissions = botCommand.requirements.permissions;
+
+    if (permissions.length !== 0) {
+      const permissionsList = [];
+
+      Object.keys(permissions).forEach((key) => {
+        permissionsList.push(key);
+      });
+
+      if (permissionsList[0]) {
+        commandHelpEmbed.embed.fields.push({
+          name: 'Requirements',
+          value: `\`${permissionsList.join('`, `')}\``,
+        });
+      }
+    }
+
+    return msg.channel.createMessage(commandHelpEmbed);
+  },
+
+  options: {
+    aliases: ['h', 'commands'],
+    cooldown: 1000,
+    description: 'Diplay the help message, or get more information on a command!',
+    fullDescription: `
+      Displays the help message. \`{prefix}help\` sends the list of commands.
+
+      You can also type \`{prefix}help 2\` to start at the second page and so on. This is especially useful for cases when the bot does not have the permissions to add reaction buttons.
+  
+      Type \`{prefix}help command\` to view detailed information on specific commands.
+    `,
+    usage: 'help translate',
+    reactionButtonTimeout: 120000,
+  },
 };
 
 module.exports = addReactionButtons(command, command.options.reactionButtonTimeout);

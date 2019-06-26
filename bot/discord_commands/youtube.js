@@ -1,58 +1,30 @@
-const { google } = require('googleapis');
-const config = require('../config/config.json');
+const generateLinks = require('../util/generate_yt_links.js');
 const { saveData, addReactionButtons } = require('../common/pagination.js');
-const bot = require('../bot.js');
 
-const command = {};
+const command = {
+  name: 'youtube',
 
-command.name = 'youtube';
+  action: async (msg, args) => {
+    const links = await generateLinks(msg, args.join(' '));
 
-async function generateLinks(msg, query) {
-  const links = [];
-  const hasAddReactionsPermission = msg.channel.permissionsOf(bot.user.id).has('addReactions');
+    saveData(
+      msg.id,
+      links,
+      msg.author.id,
+      command.options.reactionButtonTimeout,
+    );
 
-  const youtube = google.youtube({
-    version: 'v3',
-    auth: config.youtubeKey,
-  });
+    return msg.channel.createMessage(links[0]);
+  },
 
-  const params = {
-    part: 'snippet',
-    q: query,
-    type: 'video',
-  };
-
-  const response = await youtube.search.list(params);
-
-  response.data.items.forEach((item) => {
-    let content = `https://youtube.com/watch?v=${item.id.videoId}`;
-    if (hasAddReactionsPermission) {
-      content += `\n${msg.author.username} can use the reaction buttons below to switch pages!`;
-    }
-    links.push(content);
-  });
-
-  return links;
-}
-
-command.action = async (msg, args) => {
-  const links = await generateLinks(msg, args.join(' '));
-  saveData(
-    msg.id,
-    links,
-    msg.author.id,
-    command.options.reactionButtonTimeout,
-  );
-  return msg.channel.createMessage(links[0]);
-};
-
-command.options = {
-  aliases: ['yt'],
-  argsRequired: true,
-  cooldown: 3000,
-  description: 'Searches for a video on YouTube!',
-  usage: 'yt we are number one',
-  reactionButtonTimeout: 120000,
+  options: {
+    aliases: ['yt'],
+    argsRequired: true,
+    cooldown: 3000,
+    description: 'Searches for a video on YouTube!',
+    usage: 'yt we are number one',
+    reactionButtonTimeout: 120000,
+  },
 };
 
 module.exports = addReactionButtons(command, command.options.reactionButtonTimeout);

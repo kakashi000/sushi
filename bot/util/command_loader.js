@@ -7,9 +7,7 @@ const logData = require('./logger.js');
 
 function loadCommands() {
   const commandsPath = path.join(__dirname, '../discord_commands');
-
   const commands = fs.readdirSync(commandsPath).map(file => require(`../discord_commands/${file}`));
-
   const errorMessage = 'Something went wrong with that command.';
 
   commands.forEach((command) => {
@@ -35,6 +33,7 @@ function loadCommands() {
       options.invalidUsageMessage = (msg) => {
         const parts = msg.content.split(' ').map(s => s.trim()).filter(s => s);
         const args = parts.slice(1);
+
         if (!args[0]) {
           commands.help.action(msg, command.name);
         }

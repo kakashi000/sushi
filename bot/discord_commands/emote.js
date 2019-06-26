@@ -1,26 +1,30 @@
-const command = {};
+const command = {
+  name: 'emote',
 
-command.name = 'emote';
+  action: async (msg, args) => {
+    const emojiIDRegex = new RegExp('\\d+', 'g');
+    const match = args.join(' ').match(emojiIDRegex);
 
-command.action = async (msg, args) => {
-  const emojiIDRegex = new RegExp('\\d+', 'g');
-  const match = args.join(' ').match(emojiIDRegex);
-  if (match) {
-    let links = '';
-    match.forEach((emojiID) => {
-      links += `https://cdn.discordapp.com/emojis/${emojiID}.png \n`;
-    });
-    return msg.channel.createMessage(links);
-  }
-  return msg.channel.createMessage('No custom emotes found~');
-};
+    if (match) {
+      let links = '';
 
-command.options = {
-  aliases: ['se'],
-  argsRequired: true,
-  cooldown: 3000,
-  description: 'Get the full image of one or more custom emotes!',
-  usage: 'se :customEmote:',
+      match.forEach((emojiID) => {
+        links += `https://cdn.discordapp.com/emojis/${emojiID}.png \n`;
+      });
+
+      return msg.channel.createMessage(links);
+    }
+
+    return msg.channel.createMessage('No custom emotes found~');
+  },
+
+  options: {
+    aliases: ['se'],
+    argsRequired: true,
+    cooldown: 3000,
+    description: 'Get the full image of one or more custom emotes!',
+    usage: 'se :customEmote:',
+  },
 };
 
 module.exports = command;

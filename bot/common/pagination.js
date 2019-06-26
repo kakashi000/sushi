@@ -1,80 +1,84 @@
 const bot = require('../bot.js');
 
-const pagination = {};
+const pagination = {
+  state: {},
 
-pagination.state = {};
+  saveData: (msgID, pages, authorID, timeout, pageNumber) => {
+    pagination.state[msgID] = {
+      pages,
+      authorID,
+      pageNo: pageNumber || 0,
+    };
 
-pagination.saveData = (msgID, pages, authorID, timeout, pageNumber) => {
-  pagination.state[msgID] = {
-    pages,
-    authorID,
-    pageNo: pageNumber || 0,
-  };
-  setTimeout(() => delete pagination.state[msgID], timeout);
-  return pages;
-};
+    setTimeout(() => delete pagination.state[msgID], timeout);
 
-pagination.addReactionButtons = (command, timeout) => {
-  const commandCopy = { ...command };
+    return pages;
+  },
 
-  commandCopy.options.hooks = {
-    postCommand: (msg, args, res) => {
-      if (!res) {
-        return;
-      }
+  addReactionButtons: (command, timeout) => {
+    const commandCopy = { ...command };
 
-      pagination.state[res.id] = pagination.state[msg.id];
-      setTimeout(() => delete pagination.state[res.id], timeout);
+    commandCopy.options.hooks = {
+      postCommand: (msg, args, res) => {
+        if (!res) {
+          return;
+        }
 
-      if (!pagination.state[res.id]) {
-        return;
-      }
+        pagination.state[res.id] = pagination.state[msg.id];
 
-      const hasAddReactionsPermission = msg.channel.permissionsOf(bot.user.id).has('addReactions');
-      if (hasAddReactionsPermission) {
-        bot.addMessageReaction(res.channel.id, res.id, '⬅');
-        bot.addMessageReaction(res.channel.id, res.id, '➡');
-      }
+        setTimeout(() => delete pagination.state[res.id], timeout);
 
-      const hasManageMessagesPermission = msg.channel.permissionsOf(bot.user.id).has('manageMessages');
-      if (hasManageMessagesPermission) {
-        setTimeout(() => bot.removeMessageReactions(res.channel.id, res.id), timeout);
-      }
-    },
-  };
-  return commandCopy;
-};
+        if (!pagination.state[res.id]) {
+          return;
+        }
 
-pagination.movePage = (msg, emoji, userID) => {
-  if (emoji.name !== '⬅' && emoji.name !== '➡') {
-    return;
-  }
+        const hasAddReactionsPermission = msg.channel.permissionsOf(bot.user.id).has('addReactions');
+        if (hasAddReactionsPermission) {
+          bot.addMessageReaction(res.channel.id, res.id, '⬅');
+          bot.addMessageReaction(res.channel.id, res.id, '➡');
+        }
 
-  if (!pagination.state[msg.id] || !pagination.state[msg.id].pages) {
-    return;
-  }
+        const hasManageMessagesPermission = msg.channel.permissionsOf(bot.user.id).has('manageMessages');
+        if (hasManageMessagesPermission) {
+          setTimeout(() => bot.removeMessageReactions(res.channel.id, res.id), timeout);
+        }
+      },
+    };
 
-  const messageState = pagination.state[msg.id];
+    return commandCopy;
+  },
 
-  if (messageState.authorID !== userID) {
-    return;
-  }
-
-  if (emoji.name === '⬅') {
-    if (messageState.pageNo === 0) {
+  movePage: (msg, emoji, userID) => {
+    if (emoji.name !== '⬅' && emoji.name !== '➡') {
       return;
     }
 
-    pagination.state[msg.id].pageNo -= 1;
-  } else if (emoji.name === '➡') {
-    if ((messageState.pageNo + 1) === messageState.pages.length) {
+    if (!pagination.state[msg.id] || !pagination.state[msg.id].pages) {
       return;
     }
 
-    pagination.state[msg.id].pageNo += 1;
-  }
+    const messageState = pagination.state[msg.id];
 
-  bot.editMessage(msg.channel.id, msg.id, messageState.pages[(messageState.pageNo)]);
+    if (messageState.authorID !== userID) {
+      return;
+    }
+
+    if (emoji.name === '⬅') {
+      if (messageState.pageNo === 0) {
+        return;
+      }
+
+      pagination.state[msg.id].pageNo -= 1;
+    } else if (emoji.name === '➡') {
+      if ((messageState.pageNo + 1) === messageState.pages.length) {
+        return;
+      }
+
+      pagination.state[msg.id].pageNo += 1;
+    }
+
+    bot.editMessage(msg.channel.id, msg.id, messageState.pages[(messageState.pageNo)]);
+  },
 };
 
 module.exports = pagination;

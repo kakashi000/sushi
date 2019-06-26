@@ -1,6 +1,6 @@
 const db = require('../db/database.js');
 
-async function logData(msg, user, commandName) {
+const logData = async (msg, user, commandName) => {
   try {
     const usersQuery = {
       text: `
@@ -27,6 +27,6 @@ async function logData(msg, user, commandName) {
   } catch (err) {
     console.log(err.stack);
   }
-}
+};
 
 module.exports = logData;
