@@ -10,9 +10,9 @@ embedGenerator.generateKitsuEmbed = (type, item, msg, currentPage, lastPage) => 
   const hasAddReactionsPermission = msg.channel.permissionsOf(bot.user.id).has('addReactions');
 
   if (type === 'Anime' || type === 'Manga') {
-    const synopsis = (item.attributes.synopsis.length < 700)
-      ? item.attributes.synopsis
-      : `${item.attributes.synopsis.substr(0, 700)}...`;
+    const synopsis = (item.synopsis.length < 700)
+      ? item.synopsis
+      : `${item.synopsis.substr(0, 700)}...`;
 
     const embed = {
       embed: {
@@ -26,13 +26,13 @@ embedGenerator.generateKitsuEmbed = (type, item, msg, currentPage, lastPage) => 
         fields: [
           {
             name: 'Title',
-            value: (item.attributes.canonicalTitle === '\n\n')
-              ? 'No title found.' : item.attributes.canonicalTitle,
+            value: (item.canonicalTitle === '\n\n')
+              ? 'No title found.' : item.canonicalTitle,
           },
           {
             name: 'Type',
-            value: (item.attributes.subtype === '\n\n')
-              ? 'No type found.' : item.attributes.subtype,
+            value: (item.subtype === '\n\n')
+              ? 'No type found.' : item.subtype,
           },
           {
             name: 'Synopsis',
@@ -41,7 +41,7 @@ embedGenerator.generateKitsuEmbed = (type, item, msg, currentPage, lastPage) => 
           },
         ],
         thumbnail: {
-          url: item.attributes.posterImage.small,
+          url: item.posterImage.small,
         },
         timestamp: new Date(),
         footer: {
@@ -113,11 +113,15 @@ embedGenerator.generateKitsuEmbed = (type, item, msg, currentPage, lastPage) => 
 };
 
 embedGenerator.generateEmbeds = async (type, msg, args) => {
-  const response = await api.get(type, {
-    filter: {
-      name: args.join(' '),
-    },
-  });
+  const text = args.join(' ');
+
+  const options = {
+    filter: type === 'Character'
+      ? { name: text }
+      : { text },
+  };
+
+  const response = await api.get(type, options);
 
   if (!response.data[0]) {
     return;
