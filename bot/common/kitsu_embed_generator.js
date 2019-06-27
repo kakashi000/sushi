@@ -25,18 +25,15 @@ const embedGenerator = {
           fields: [
             {
               name: 'Title',
-              value: (item.canonicalTitle === '\n\n')
-                ? 'No title found.' : item.canonicalTitle,
+              value: item.canonicalTitle || 'No title found.',
             },
             {
               name: 'Type',
-              value: (item.subtype === '\n\n')
-                ? 'No type found.' : item.subtype,
+              value: item.subtype || 'No type found.',
             },
             {
               name: 'Synopsis',
-              value: (synopsis === '\n\n')
-                ? 'No synopsis found.' : synopsis,
+              value: synopsis || 'No synopsis found.',
             },
           ],
           thumbnail: {
