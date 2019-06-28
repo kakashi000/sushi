@@ -6,7 +6,7 @@ const bot = require('../bot.js');
 const logData = require('./logger.js');
 
 function loadCommands() {
-  const commandsPath = path.join(__dirname, '../discord_commands');
+  const commandsPath = path.join(__dirname, '..', '/discord_commands');
   const commands = fs.readdirSync(commandsPath).map(file => require(`../discord_commands/${file}`));
   const errorMessage = 'Something went wrong with that command.';
 
