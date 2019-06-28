@@ -22,7 +22,7 @@ const logData = async (msg, user, commandName) => {
       values: [msg.id, user.id, commandName, Date.now()],
     };
 
-    await Promise.all([db.query(usersQuery)], db.query(commandsQuery));
+    await Promise.all([db.query(usersQuery), db.query(commandsQuery)]);
   } catch (err) {
     console.log(err.stack);
   }
