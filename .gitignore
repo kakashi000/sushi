@@ -5,5 +5,4 @@ node_modules/
 .vscode/
 
 # keys
-config.json
-config-empty.json
+config/
