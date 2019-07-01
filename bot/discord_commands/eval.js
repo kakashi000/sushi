@@ -5,22 +5,22 @@ const config = require('../config/config.json');
 const bot = require('../bot.js');
 const db = require('../db/database.js');
 
+const clean = (text) => {
+  if (typeof (text) === 'string') return text.replace(/`/g, `\`${String.fromCharCode(8203)}`).replace(/@/g, `@${String.fromCharCode(8203)}`);
+  return text;
+};
+
 const command = {
   name: 'eval',
 
   action: async (msg, args) => {
-    const clean = (text) => {
-      if (typeof (text) === 'string') return text.replace(/`/g, `\`${String.fromCharCode(8203)}`).replace(/@/g, `@${String.fromCharCode(8203)}`);
-      return text;
-    };
-
     try {
-      const code = args.join(' ');
+      const code = args.filter(arg => (!arg.startsWith('`'))).join(' ');
       let evaled = await eval(code);
       if (typeof evaled !== 'string') {
         evaled = util.inspect(evaled);
       }
-      await msg.channel.createMessage(`\`\`\`xl\n${clean(evaled)}\n\`\`\``);
+      return;
     } catch (err) {
       await msg.channel.createMessage(`\`ERROR\` \`\`\`xl\n${clean(err)}\n\`\`\``);
     }
