@@ -4,6 +4,9 @@ const util = require('util');
 const config = require('../config/config.json');
 const bot = require('../bot.js');
 const db = require('../db/database.js');
+const pagination = require('../common/pagination.js');
+const { setPrefix, getPrefix, getGuildPrefixes } = require('../util/prefix_manager.js');
+const logData = require('../util/logger.js');
 
 const clean = (text) => {
   if (typeof (text) === 'string') return text.replace(/`/g, `\`${String.fromCharCode(8203)}`).replace(/@/g, `@${String.fromCharCode(8203)}`);
