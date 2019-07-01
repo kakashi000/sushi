@@ -14,6 +14,8 @@ const command = {
   name: 'eval',
 
   action: async (msg, args) => {
+    const send = content => msg.channel.createMessage(content);
+
     try {
       const code = args.filter(arg => (!arg.startsWith('`'))).join(' ');
       let evaled = await eval(code);
