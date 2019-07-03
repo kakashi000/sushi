@@ -8,7 +8,6 @@ const logData = require('./logger.js');
 function loadCommands() {
   const commandsPath = path.join(__dirname, '..', '/discord_commands');
   const commands = fs.readdirSync(commandsPath).map(file => require(`../discord_commands/${file}`));
-  const errorMessage = 'Something went wrong with that command.';
 
   commands.forEach((command) => {
     const options = command.options;
@@ -18,7 +17,7 @@ function loadCommands() {
     }
 
     if (!options.errorMessage) {
-      options.errorMessage = errorMessage;
+      options.errorMessage = 'Something went wrong with that command.';
     }
 
     if (!options.cooldownMessage) {
@@ -31,11 +30,10 @@ function loadCommands() {
 
     if (options.argsRequired) {
       options.invalidUsageMessage = (msg) => {
-        const parts = msg.content.split(' ').map(s => s.trim()).filter(s => s);
-        const args = parts.slice(1);
+        const args = msg.content.split(' ').map(s => s.trim()).filter(s => s).slice(1);
 
         if (!args[0]) {
-          commands.help.action(msg, command.name);
+          bot.commands.help.execute(msg, [command.name]);
         }
       };
     }
