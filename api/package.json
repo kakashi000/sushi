@@ -1,0 +1,27 @@
+{
+  "name": "sushi-api",
+  "version": "0.0.1",
+  "description": "sushi's api server",
+  "main": "index.js",
+  "scripts": {
+    "dev": "nodemon app.js"
+  },
+  "author": "kakashi",
+  "license": "MIT",
+  "devDependencies": {
+    "eslint": "^5.16.0",
+    "eslint-config-airbnb-base": "^13.1.0",
+    "eslint-plugin-import": "^2.16.0",
+    "nodemon": "^1.19.1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/kakashi000/sushi.git"
+  },
+  "dependencies": {
+    "koa": "^2.7.0",
+    "koa-router": "^7.4.0",
+    "mocha": "^6.1.4",
+    "pg": "^7.11.0"
+  }
+}
