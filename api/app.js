@@ -19,4 +19,6 @@ app.on('error', (err) => {
 
 app.use(stats.routes());
 
-app.listen(3000);
+const server = app.listen(3000);
+
+module.exports = server;
