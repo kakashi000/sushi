@@ -1,16 +1,16 @@
 const bot = require('../bot.js');
 
-const pagination = {
+const paginationManager = {
   state: {},
 
   saveData: (msgID, pages, authorID, timeout, pageNumber) => {
-    pagination.state[msgID] = {
+    paginationManager.state[msgID] = {
       pages,
       authorID,
       pageNo: pageNumber || 0,
     };
 
-    setTimeout(() => delete pagination.state[msgID], timeout);
+    setTimeout(() => delete paginationManager.state[msgID], timeout);
 
     return pages;
   },
@@ -26,13 +26,13 @@ const pagination = {
           return;
         }
 
-        pagination.state[res.id] = pagination.state[msg.id];
+        paginationManager.state[res.id] = paginationManager.state[msg.id];
 
         setTimeout(() => {
-          delete pagination.state[res.id];
+          delete paginationManager.state[res.id];
         }, timeout);
 
-        if (!pagination.state[res.id]) {
+        if (!paginationManager.state[res.id]) {
           return;
         }
 
@@ -57,11 +57,11 @@ const pagination = {
       return;
     }
 
-    if (!pagination.state[msg.id] || !pagination.state[msg.id].pages) {
+    if (!paginationManager.state[msg.id] || !paginationManager.state[msg.id].pages) {
       return;
     }
 
-    const messageState = pagination.state[msg.id];
+    const messageState = paginationManager.state[msg.id];
 
     if (messageState.authorID !== userID) {
       return;
@@ -72,17 +72,17 @@ const pagination = {
         return;
       }
 
-      pagination.state[msg.id].pageNo -= 1;
+      paginationManager.state[msg.id].pageNo -= 1;
     } else if (emoji.name === '➡') {
       if ((messageState.pageNo + 1) === messageState.pages.length) {
         return;
       }
 
-      pagination.state[msg.id].pageNo += 1;
+      paginationManager.state[msg.id].pageNo += 1;
     }
 
     bot.editMessage(msg.channel.id, msg.id, messageState.pages[(messageState.pageNo)]);
   },
 };
 
-module.exports = pagination;
+module.exports = paginationManager;

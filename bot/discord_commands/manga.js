@@ -1,5 +1,5 @@
-const { saveData, addReactionButtons } = require('../common/pagination.js');
-const { generateEmbeds } = require('../common/kitsu_embed_generator.js');
+const { saveData, addReactionButtons } = require('../util/pagination_manager.js');
+const { generateEmbeds } = require('../util/kitsu_embed_generator.js');
 
 const command = {
   name: 'manga',

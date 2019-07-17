@@ -1,5 +1,5 @@
-const generateLinks = require('../util/generate_yt_links.js');
-const { saveData, addReactionButtons } = require('../common/pagination.js');
+const generateLinks = require('../util/generate_youtube_links.js');
+const { saveData, addReactionButtons } = require('../util/pagination_manager.js');
 
 const command = {
   name: 'youtube',

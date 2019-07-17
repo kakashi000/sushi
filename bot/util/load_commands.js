@@ -3,7 +3,7 @@
 const fs = require('fs');
 const path = require('path');
 const bot = require('../bot.js');
-const logData = require('./logger.js');
+const logData = require('./log_data.js');
 
 function loadCommands() {
   const commandsPath = path.join(__dirname, '..', '/discord_commands');

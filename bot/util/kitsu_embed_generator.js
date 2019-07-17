@@ -4,7 +4,7 @@ const bot = require('../bot.js');
 
 const api = new Kitsu();
 
-const embedGenerator = {
+const kitsuEmbedGenerator = {
   generateKitsuEmbed: (type, item, msg, currentPage, lastPage) => {
     const hasAddReactionsPermission = msg.channel.permissionsOf(bot.user.id).has('addReactions');
 
@@ -124,11 +124,11 @@ const embedGenerator = {
     }
 
     const embeds = response.data.map((item, index, data) => (
-      embedGenerator.generateKitsuEmbed(type, item, msg, (index + 1), data.length)
+      kitsuEmbedGenerator.generateKitsuEmbed(type, item, msg, (index + 1), data.length)
     ));
 
     return embeds;
   },
 };
 
-module.exports = embedGenerator;
+module.exports = kitsuEmbedGenerator;

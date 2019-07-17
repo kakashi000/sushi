@@ -3,7 +3,7 @@ const config = require('../config/config.json');
 
 const search = google.customsearch('v1');
 
-const generateLinks = async (query) => {
+const generateImageLinks = async (query) => {
   const options = {
     cx: config.imgID,
     key: config.imgKey,
@@ -18,4 +18,4 @@ const generateLinks = async (query) => {
   return links;
 };
 
-module.exports = generateLinks;
+module.exports = generateImageLinks;

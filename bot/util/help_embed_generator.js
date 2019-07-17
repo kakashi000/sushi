@@ -1,7 +1,7 @@
 const bot = require('../bot.js');
 const config = require('../config/config.json');
 
-const embedGenerator = {
+const helpEmbedGenerator = {
   generateHelpEmbeds: (prefix, msg) => {
     const commandArray = Object.keys(bot.commands).map(
       key => bot.commands[key],
@@ -120,4 +120,4 @@ const embedGenerator = {
   },
 };
 
-module.exports = embedGenerator;
+module.exports = helpEmbedGenerator;

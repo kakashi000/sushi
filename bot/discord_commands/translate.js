@@ -23,7 +23,7 @@ const command = {
     const response = await got('https://translate.yandex.net/api/v1.5/tr.json/translate', options);
     const textTranslated = decodeURIComponent(response.body.text[0]);
 
-    const translationInfo = {
+    const translationEmbed = {
       embed: {
         color: config.color,
         title: 'Translation',
@@ -39,7 +39,7 @@ const command = {
       },
     };
 
-    return msg.channel.createMessage(translationInfo);
+    return msg.channel.createMessage(translationEmbed);
   },
 
   options: {

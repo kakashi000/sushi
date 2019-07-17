@@ -1,5 +1,5 @@
-const { generateHelpEmbeds, generateCommandEmbed } = require('../common/help_embed_generator.js');
-const { saveData, addReactionButtons } = require('../common/pagination.js');
+const { generateHelpEmbeds, generateCommandEmbed } = require('../util/help_embed_generator.js');
+const { saveData, addReactionButtons } = require('../util/pagination_manager.js');
 const { getPrefix } = require('../util/prefix_manager.js');
 
 const command = {

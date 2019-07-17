@@ -7,7 +7,7 @@ const youtube = google.youtube({
   auth: config.youtubeKey,
 });
 
-const generateLinks = async (msg, query) => {
+const generateYoutubeLinks = async (msg, query) => {
   const params = {
     part: 'snippet',
     q: query,
@@ -30,4 +30,4 @@ const generateLinks = async (msg, query) => {
   return links;
 };
 
-module.exports = generateLinks;
+module.exports = generateYoutubeLinks;

@@ -1,5 +1,5 @@
 const generateLinks = require('../util/generate_image_links.js');
-const { saveData, addReactionButtons } = require('../common/pagination.js');
+const { saveData, addReactionButtons } = require('../util/pagination_manager.js');
 
 const command = {
   name: 'image',
