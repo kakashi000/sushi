@@ -1,6 +1,6 @@
 const bot = require('./bot.js');
-const loadCommands = require('./util/command_loader.js');
-const { movePage } = require('./common/pagination.js');
+const loadCommands = require('./util/load_commands.js');
+const { movePage } = require('./util/pagination_manager.js');
 const { getGuildPrefixes, getPrefix } = require('./util/prefix_manager.js');
 
 bot.on('ready', async () => {
