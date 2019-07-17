@@ -6,13 +6,9 @@ const command = {
     const match = args.join(' ').match(emojiIDRegex);
 
     if (match) {
-      let links = '';
+      const links = match.map(emojiID => `https://cdn.discordapp.com/emojis/${emojiID}.png`);
 
-      match.forEach((emojiID) => {
-        links += `https://cdn.discordapp.com/emojis/${emojiID}.png \n`;
-      });
-
-      return msg.channel.createMessage(links);
+      return msg.channel.createMessage(links.join('\n'));
     }
 
     return msg.channel.createMessage('No custom emotes found~');

@@ -15,8 +15,10 @@ const pagination = {
     return pages;
   },
 
-  addReactionButtons: (command, timeout) => {
+  addReactionButtons: (command) => {
     const commandCopy = { ...command };
+
+    const timeout = commandCopy.options.reactionButtonTimeout;
 
     commandCopy.options.hooks = {
       postCommand: (msg, args, res) => {
@@ -26,7 +28,9 @@ const pagination = {
 
         pagination.state[res.id] = pagination.state[msg.id];
 
-        setTimeout(() => delete pagination.state[res.id], timeout);
+        setTimeout(() => {
+          delete pagination.state[res.id];
+        }, timeout);
 
         if (!pagination.state[res.id]) {
           return;

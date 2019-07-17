@@ -15,17 +15,16 @@ const generateLinks = async (msg, query) => {
   };
 
   const response = await youtube.search.list(params);
-  const links = [];
   const hasAddReactionsPermission = msg.channel.permissionsOf(bot.user.id).has('addReactions');
 
-  response.data.items.forEach((item) => {
+  const links = response.data.items.map((item) => {
     let content = `https://youtube.com/watch?v=${item.id.videoId}`;
 
     if (hasAddReactionsPermission) {
       content += `\n${msg.author.username} can use the reaction buttons below to switch pages!`;
     }
 
-    links.push(content);
+    return content;
   });
 
   return links;
